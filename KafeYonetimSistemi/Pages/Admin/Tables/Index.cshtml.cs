@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using KafeYonetimSistemi.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using KafeYonetimSistemi.Data;
-using KafeYonetimSistemi.Models;
 
 namespace KafeYonetimSistemi.Pages.Admin.Tables
 {
@@ -19,7 +13,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Tables
             _context = context;
         }
 
-        public IList<Table> Table { get;set; } = default!;
+        public IList<Table> Table { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
