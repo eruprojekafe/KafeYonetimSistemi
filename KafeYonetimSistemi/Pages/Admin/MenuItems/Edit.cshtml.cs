@@ -30,7 +30,7 @@ namespace KafeYonetimSistemi.Pages.Admin.MenuItems
                 return NotFound();
             }
 
-            var menuitem =  await _context.MenuItem.FirstOrDefaultAsync(m => m.Id == id);
+            var menuitem = await _context.MenuItem.FirstOrDefaultAsync(m => m.Id == id);
             if (menuitem == null)
             {
                 return NotFound();

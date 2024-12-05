@@ -30,7 +30,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Tables
                 return NotFound();
             }
 
-            var table =  await _context.Table.FirstOrDefaultAsync(m => m.Id == id);
+            var table = await _context.Table.FirstOrDefaultAsync(m => m.Id == id);
             if (table == null)
             {
                 return NotFound();

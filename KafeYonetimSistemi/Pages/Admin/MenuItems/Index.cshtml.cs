@@ -19,7 +19,7 @@ namespace KafeYonetimSistemi.Pages.Admin.MenuItems
             _context = context;
         }
 
-        public IList<MenuItem> MenuItem { get;set; } = default!;
+        public IList<MenuItem> MenuItem { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

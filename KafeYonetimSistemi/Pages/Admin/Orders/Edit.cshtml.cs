@@ -30,7 +30,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
                 return NotFound();
             }
 
-            var order =  await _context.Order.FirstOrDefaultAsync(m => m.Id == id);
+            var order = await _context.Order.FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
                 return NotFound();
