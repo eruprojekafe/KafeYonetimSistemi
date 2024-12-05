@@ -1,30 +1,35 @@
 ﻿@page
-@model KafeYonetimSistemi.Pages.Admin.Categories.IndexModel
+@model KafeYonetimSistemi.Pages.Admin.Orders.IndexModel
 
 @{
-    ViewData["Title"] = "Kategori Listesi";
+    ViewData["Title"] = "Sipariş Listesi";
 }
 
-<h1>Kategori Listesi</h1>
+<h1>Sipariş Listesi</h1>
 
 <p>
-    <a asp-page="Create">Yeni Kategori Oluştur</a>
+    <a asp-page="Create">Yeni Sipariş Oluştur</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Category[0].Name)
+                @Html.DisplayNameFor(model => model.Order[0].OrderTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Status)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Category)
-        {
+        @foreach (var item in Model.Order) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.OrderTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Düzenle</a> |
@@ -32,6 +37,7 @@
                 <a asp-page="./Delete" asp-route-id="@item.Id">Sil</a>
             </td>
         </tr>
-        }
+}
     </tbody>
 </table>
+
