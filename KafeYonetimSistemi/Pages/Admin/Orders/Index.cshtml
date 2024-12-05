@@ -1,42 +1,37 @@
 ﻿@page
-@model KafeYonetimSistemi.Pages.Admin.Orders.IndexModel
+@model KafeYonetimSistemi.Pages.Admin.Categories.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Kategori Listesi";
 }
 
-<h1>Index</h1>
+<h1>Kategori Listesi</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create">Yeni Kategori Oluştur</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Order[0].OrderTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Status)
+                @Html.DisplayNameFor(model => model.Category[0].Name)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Order) {
+        @foreach (var item in Model.Category)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderTime)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Düzenle</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Detaylar</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Sil</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
