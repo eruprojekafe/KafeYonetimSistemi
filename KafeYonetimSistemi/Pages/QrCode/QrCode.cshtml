@@ -2,13 +2,13 @@
 @model KafeYonetimSistemi.Pages.QrCode.QrCodeModel
 
 @{
-    ViewData["Title"] = "QrCode";
+    ViewData["Title"] = "QR Kod";
 }
 
-<h1>QrCode</h1>
+<h1>QR Kod Sayfası</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create">Yeni QR Kod Oluştur</a>
 </p>
 <table class="table">
     <thead>
@@ -29,26 +29,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.MenuItem) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAvailable)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.MenuItem)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAvailable)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Düzenle</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Detaylar</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Sil</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
