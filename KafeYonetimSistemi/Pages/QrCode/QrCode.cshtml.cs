@@ -19,7 +19,7 @@ namespace KafeYonetimSistemi.Pages.QrCode
             _context = context;
         }
 
-        public IList<MenuItem> MenuItem { get;set; } = default!;
+        public IList<MenuItem> MenuItem { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
