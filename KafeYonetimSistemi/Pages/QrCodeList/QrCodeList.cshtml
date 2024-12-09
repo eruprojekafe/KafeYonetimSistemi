@@ -1,54 +1,71 @@
-﻿@page
+﻿@page "{categoryId:int?}"
 @model KafeYonetimSistemi.Pages.QrCodeList.QrCodeListModel
 
 @{
-    ViewData["Title"] = "QR Kod";
+    ViewData["Title"] = "Menü";
 }
 
-<h1>QR Kod Sayfası</h1>
+<h1>Menü</h1>
 
 <p>
-    <a asp-page="Create">Yeni QR Kod Oluştur</a>
+    Tüm menü seçeneklerini aşağıda görebilirsiniz.
 </p>
-<table class="table">
+
+<!-- Kategoriler -->
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link @(Model.SelectedCategoryId == null ? "active" : "")"
+           asp-page="./QrCode"
+           class="nav-link">Tümü</a>
+    </li>
+    @foreach (var category in Model.Categories)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(Model.SelectedCategoryId == category.Id ? "active" : "")"
+               asp-page="./QrCode"
+               asp-route-categoryId="@category.Id">
+                @category.Name
+            </a>
+        </li>
+    }
+</ul>
+
+<!-- Menü -->
+<table class="table mt-4">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MenuItem[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MenuItem[0].Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MenuItem[0].Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MenuItem[0].IsAvailable)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.MenuItem[0].Name)</th>
+            <th>@Html.DisplayNameFor(model => model.MenuItem[0].Description)</th>
+            <th>@Html.DisplayNameFor(model => model.MenuItem[0].Price)</th>
+            <th>Durum</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.MenuItem)
+        @if (Model.MenuItem != null && Model.MenuItem.Any())
+        {
+            @foreach (var item in Model.MenuItem)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>
+                        @if (item.IsAvailable)
+                        {
+                            <span style="color:green; font-weight:bold;">Mevcut</span>
+                        }
+                        else
+                        {
+                            <span style="color:red; font-weight:bold;">Tükendi</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsAvailable)
-                </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Düzenle</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Detaylar</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Sil</a>
-                </td>
+                <td colspan="4">Bu kategoride herhangi bir öğe bulunmamaktadır.</td>
             </tr>
         }
     </tbody>
