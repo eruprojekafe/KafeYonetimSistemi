@@ -1,39 +1,63 @@
 ﻿@page
 @model KafeYonetimSistemi.Pages.Admin.Tables.CreateModel
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Yeni Durum Oluştur";
 }
 
-<h1>Create</h1>
+<h1>Yeni Durum Oluştur</h1>
 
-<h4>Table</h4>
+<h4>MASA</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form method="post">
+        <form method="post" class="bordered-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Masa Numarası -->
             <div class="form-group">
                 <label asp-for="Table.TableNumber" class="control-label"></label>
                 <input asp-for="Table.TableNumber" class="form-control" />
                 <span asp-validation-for="Table.TableNumber" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
+
+            <!-- Müsaitlik Durumu -->
+            <div class="form-group form-check" style="margin-top: 50px;">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Table.IsAvailable" /> @Html.DisplayNameFor(model => model.Table.IsAvailable)
+                    <input class="form-check-input" asp-for="Table.IsAvailable" />
+                    @Html.DisplayNameFor(model => model.Table.IsAvailable)
                 </label>
             </div>
+
+            <!-- Gönder Butonu -->
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Oluştur" class="btn btn-primary" style="margin-top: 50px;" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
+<!-- Listeye geri dönme butonu -->
+<div style="margin-top: 50px;">
+    <a asp-page="Index" class="btn btn-secondary" style="margin-right: 50px;">Listeye Geri Dön</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+
+<!-- Stil Eklendi -->
+<style>
+    .bordered-form {
+        border: 2px solid #ddd; /* Kenar çizgisi */
+        padding: 20px; /* İç boşluk */
+        border-radius: 8px; /* Köşe yuvarlama */
+        background-color: #f9f9f9; /* Arka plan rengi */
+        margin-top: 20px; /* Üst boşluk */
+    }
+
+    .form-group {
+        margin-bottom: 30px; /* Elemanlar arasındaki boşluk */
+    }
+</style>
