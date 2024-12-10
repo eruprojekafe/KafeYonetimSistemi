@@ -12,6 +12,14 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+            <div class="form-group">
+                <label asp-for="Order.Table">Masa Seçimi</label>
+                <select asp-for="Order.Table.Id" class="form-control" asp-items="Model.AvailableTables">
+                    <option value="">-- Masa Seçin --</option>
+                </select>
+                <span asp-validation-for="Order.Table.Id" class="text-danger"></span>
+            </div>
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Order.OrderTime" class="control-label"></label>
@@ -19,9 +27,13 @@
                 <span asp-validation-for="Order.OrderTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Order.Status" class="control-label"></label>
-                <select asp-for="Order.Status" class="form-control"></select>
-                <span asp-validation-for="Order.Status" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="Order.Status">Sipariş Durumu</label>
+                    <select asp-for="Order.Status" class="form-control" asp-items="Model.OrderStatusList">
+                        <option value="">-- Sipariş Durumu Seçin --</option>
+                    </select>
+                    <span asp-validation-for="Order.Status" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Oluştur" class="btn btn-primary" />

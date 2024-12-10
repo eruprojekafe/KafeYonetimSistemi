@@ -5,11 +5,11 @@ namespace KafeYonetimSistemi.Models;
 
 public enum OrderStatus
 {
-    Created,
-    Preparing,
-    Ready,
-    Delivered,
-    Cancelled
+    Created = 0,
+    Preparing = 1,
+    Ready = 2,
+    Delivered = 3,
+    Cancelled = 4
 }
 
 public class Order
@@ -25,6 +25,7 @@ public class Order
 
     [ForeignKey("TableId")]
     public required Table Table { get; set; }
+
 
     public ICollection<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
 }
