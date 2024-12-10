@@ -19,7 +19,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Categories
             _context = context;
         }
 
-        public IList<Category> Category { get;set; } = default!;
+        public IList<Category> Category { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

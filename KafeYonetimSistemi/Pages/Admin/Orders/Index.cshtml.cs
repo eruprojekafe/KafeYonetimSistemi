@@ -19,7 +19,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             _context = context;
         }
 
-        public IList<Order> Order { get;set; } = default!;
+        public IList<Order> Order { get; set; } = default!;
 
         public async Task OnGetAsync()
         {

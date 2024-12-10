@@ -1,5 +1,5 @@
 using KafeYonetimSistemi.Data;
-using KafeYonetimSistemi.Middleware; 
+using KafeYonetimSistemi.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +19,7 @@ builder.Services.AddRazorPages();
 var app = builder.Build();
 
 
-app.UseMiddleware<AdminAccessMiddleware>();  
+app.UseMiddleware<AdminAccessMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
