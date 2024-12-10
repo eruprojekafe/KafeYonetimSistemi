@@ -14,18 +14,23 @@ namespace KafeYonetimSistemi.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
-            // İstek URL'si "/Admin" ile başlıyorsa
+          
             if (context.Request.Path.StartsWithSegments("/Admin"))
             {
-                // 404 Hata döndür
-                context.Response.StatusCode = StatusCodes.Status404NotFound;
-                await context.Response.WriteAsync("404 - Page not Found");
-                return;
+                
+                if (!context.User.Identity.IsAuthenticated)
+                {
+                    
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    await context.Response.WriteAsync("404 - Page not Found");
+                    return;
+                }
             }
 
-            // Diğer middleware'lere geç
+            
             await _next(context);
         }
     }
 }
+
 
