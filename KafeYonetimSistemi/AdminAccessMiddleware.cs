@@ -19,7 +19,7 @@ namespace KafeYonetimSistemi.Middleware
             {
                 // 404 Hata döndür
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
-                await context.Response.WriteAsync("404 - Sayfa Bulunamadı");
+                await context.Response.WriteAsync("404 - Page not Found");
                 return;
             }
 
