@@ -24,7 +24,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
 
         [BindProperty]
         public Order Order { get; set; } = default!;
-        private void PopulateFormData()
+        private void GetFormData()
         {
             // Müsait masaları listeleme
             AvailableTables = _context.Table
@@ -58,7 +58,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
                 return NotFound();
             }
             // Form verilerini doldur
-            PopulateFormData();
+            GetFormData();
             Order = order;
             return Page();
         }
@@ -70,7 +70,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             if (!ModelState.IsValid)
             {
                 // Form verilerini tekrar doldur
-                PopulateFormData();
+                GetFormData();
                 return Page();
             }
             // Tabloyu direkt atamaktansa Id üzerinden ilişkilendirin
@@ -78,7 +78,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             if (table == null)
             {
                 ModelState.AddModelError("Order.Table.Id", "Geçersiz masa seçimi.");
-                PopulateFormData();
+                GetFormData();
                 return Page();
             }
 
