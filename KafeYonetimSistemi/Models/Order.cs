@@ -22,7 +22,7 @@ public class Order
 
     [Display(Name = "Sipariş Zamanı")]
     public DateTime OrderTime { get; set; }
-    
+
     [Display(Name = "Durum")]
     public OrderStatus Status { get; set; }
 
