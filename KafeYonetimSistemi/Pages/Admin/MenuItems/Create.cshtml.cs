@@ -23,7 +23,7 @@ namespace KafeYonetimSistemi.Pages.Admin.MenuItems
 
         // MenuItem ve Category ilişkisi
         [BindProperty]
-        public MenuItem MenuItem { get; set; } = default!; 
+        public MenuItem MenuItem { get; set; } = default!;
 
         public IActionResult OnGet()
         {
