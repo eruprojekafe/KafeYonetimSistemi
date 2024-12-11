@@ -24,6 +24,26 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
 
         [BindProperty]
         public Order Order { get; set; } = default!;
+        private void PopulateFormData()
+        {
+            // Müsait masaları listeleme
+            AvailableTables = _context.Table
+                .Where(t => t.IsAvailable)
+                .Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.ToString()
+                }).ToList();
+
+            // Sipariş durumlarını listeleme
+            OrderStatusList = Enum.GetValues(typeof(OrderStatus))
+               .Cast<OrderStatus>()
+               .Select(s => new SelectListItem
+               {
+                   Value = ((int)s).ToString(),
+                   Text = $"{s.GetDescription()}"
+               }).ToList();
+        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -37,23 +57,8 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             {
                 return NotFound();
             }
-            // Sadece müsait olan masaları seçiyoruz
-            AvailableTables = _context.Table
-                .Where(t => t.IsAvailable)
-                .Select(t => new SelectListItem
-                {
-                    Value = t.Id.ToString(),
-                    Text = t.ToString()
-                }).ToList();
-
-            // Sipariş durumu listeleme
-            OrderStatusList = Enum.GetValues(typeof(OrderStatus))
-                   .Cast<OrderStatus>()
-                   .Select(s => new SelectListItem
-                   {
-                       Value = ((int)s).ToString(),
-                       Text = $"{s.GetDescription()}"
-                   }).ToList();
+            // Form verilerini doldur
+            PopulateFormData();
             Order = order;
             return Page();
         }
@@ -64,23 +69,8 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
         {
             if (!ModelState.IsValid)
             {
-                // Geçersiz model durumunda listeyi tekrar yükle
-                AvailableTables = _context.Table
-                    .Where(t => t.IsAvailable)
-                    .Select(t => new SelectListItem
-                    {
-                        Value = t.Id.ToString(),
-                        Text = t.ToString()
-                    }).ToList();
-
-                OrderStatusList = Enum.GetValues(typeof(OrderStatus))
-                   .Cast<OrderStatus>()
-                   .Select(s => new SelectListItem
-                   {
-                       Value = ((int)s).ToString(),
-                       Text = $"{s.GetDescription()}"
-                   }).ToList();
-
+                // Form verilerini tekrar doldur
+                PopulateFormData();
                 return Page();
             }
             // Tabloyu direkt atamaktansa Id üzerinden ilişkilendirin
@@ -88,6 +78,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             if (table == null)
             {
                 ModelState.AddModelError("Order.Table.Id", "Geçersiz masa seçimi.");
+                PopulateFormData();
                 return Page();
             }
 

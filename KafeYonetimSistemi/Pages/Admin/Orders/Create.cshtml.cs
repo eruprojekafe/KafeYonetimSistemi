@@ -43,11 +43,9 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
         [BindProperty]
         public Order Order { get; set; } = default!;
 
-
-
-        public IActionResult OnGet()
+        private void GetFormData()
         {
-            // Sadece müsait olan masaları seçiyoruz
+            // Müsait masaları listeleme
             AvailableTables = _context.Table
                 .Where(t => t.IsAvailable)
                 .Select(t => new SelectListItem
@@ -56,43 +54,31 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
                     Text = t.ToString()
                 }).ToList();
 
-            // Sipariş durumu listeleme
+            // Sipariş durumlarını listeleme
             OrderStatusList = Enum.GetValues(typeof(OrderStatus))
                .Cast<OrderStatus>()
                .Select(s => new SelectListItem
                {
                    Value = ((int)s).ToString(),
-                   Text = $"{s.GetDescription()} " // Türkçe 
+                   Text = $"{s.GetDescription()}"
                }).ToList();
+        }
+
+        public IActionResult OnGet()
+        {
+            // Form verilerini doldur
+            GetFormData();
 
             return Page();
         }
-
-
-
-
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
-                // Geçersiz model durumunda listeyi tekrar yükle
-                AvailableTables = _context.Table
-                    .Where(t => t.IsAvailable)
-                    .Select(t => new SelectListItem
-                    {
-                        Value = t.Id.ToString(),
-                        Text = t.ToString()
-                    }).ToList();
-
-                OrderStatusList = Enum.GetValues(typeof(OrderStatus))
-                   .Cast<OrderStatus>()
-                   .Select(s => new SelectListItem
-                   {
-                       Value = ((int)s).ToString(),
-                       Text = $"{s.GetDescription()}"
-                   }).ToList();
+                // Geçersiz model durumunda form verilerini tekrar doldur
+                GetFormData();
 
                 return Page();
             }
@@ -102,6 +88,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             if (table == null)
             {
                 ModelState.AddModelError("Order.Table.Id", "Geçersiz masa seçimi.");
+                GetFormData();
                 return Page();
             }
 
