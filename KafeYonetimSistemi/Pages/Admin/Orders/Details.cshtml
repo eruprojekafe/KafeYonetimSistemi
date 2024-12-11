@@ -21,7 +21,8 @@
             @Html.DisplayNameFor(model => model.Order.Status)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Order.Status)
+            <!-- Status Türkçe olarak GetDescription() metodu ile gösteriliyor -->
+            @Model.Order.Status.GetDescription()
         </dd>
     </dl>
 </div>

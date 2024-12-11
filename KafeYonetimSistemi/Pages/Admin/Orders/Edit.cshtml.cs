@@ -19,6 +19,8 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
         {
             _context = context;
         }
+        public List<SelectListItem> OrderStatusList { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> AvailableTables { get; set; } = new List<SelectListItem>();
 
         [BindProperty]
         public Order Order { get; set; } = default!;
@@ -35,6 +37,23 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             {
                 return NotFound();
             }
+            // Sadece müsait olan masaları seçiyoruz
+            AvailableTables = _context.Table
+                .Where(t => t.IsAvailable)
+                .Select(t => new SelectListItem
+                {
+                    Value = t.Id.ToString(),
+                    Text = t.ToString()
+                }).ToList();
+
+            // Sipariş durumu listeleme
+            OrderStatusList = Enum.GetValues(typeof(OrderStatus))
+                   .Cast<OrderStatus>()
+                   .Select(s => new SelectListItem
+                   {
+                       Value = ((int)s).ToString(),
+                       Text = $"{s.GetDescription()}"
+                   }).ToList();
             Order = order;
             return Page();
         }
@@ -45,8 +64,34 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
         {
             if (!ModelState.IsValid)
             {
+                // Geçersiz model durumunda listeyi tekrar yükle
+                AvailableTables = _context.Table
+                    .Where(t => t.IsAvailable)
+                    .Select(t => new SelectListItem
+                    {
+                        Value = t.Id.ToString(),
+                        Text = t.ToString()
+                    }).ToList();
+
+                OrderStatusList = Enum.GetValues(typeof(OrderStatus))
+                   .Cast<OrderStatus>()
+                   .Select(s => new SelectListItem
+                   {
+                       Value = ((int)s).ToString(),
+                       Text = $"{s.GetDescription()}"
+                   }).ToList();
+
                 return Page();
             }
+            // Tabloyu direkt atamaktansa Id üzerinden ilişkilendirin
+            var table = _context.Table.FirstOrDefault(t => t.Id == Order.Table.Id);
+            if (table == null)
+            {
+                ModelState.AddModelError("Order.Table.Id", "Geçersiz masa seçimi.");
+                return Page();
+            }
+
+            Order.Table = table;
 
             _context.Attach(Order).State = EntityState.Modified;
 

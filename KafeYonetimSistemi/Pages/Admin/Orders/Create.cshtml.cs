@@ -11,6 +11,22 @@ using KafeYonetimSistemi.Models;
 
 namespace KafeYonetimSistemi.Pages.Admin.Orders
 {
+    public static class OrderStatusExtensions
+    {
+        public static string GetDescription(this OrderStatus status)
+        {
+            return status switch
+            {
+                OrderStatus.Created => "Oluşturuldu",
+                OrderStatus.Preparing => "Hazırlanıyor",
+                OrderStatus.Ready => "Hazır",
+                OrderStatus.Delivered => "Teslim Edildi",
+                OrderStatus.Cancelled => "İptal Edildi",
+                _ => "Bilinmiyor"
+            };
+        }
+    }
+
     public class CreateModel : PageModel
     {
         private readonly KafeYonetimSistemi.Data.ApplicationDbContext _context;
@@ -19,13 +35,15 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
         {
             _context = context;
         }
-        public List<SelectListItem> AvailableTables { get; set; }
+        public List<SelectListItem> AvailableTables { get; set; } = new List<SelectListItem>();
 
 
-        public List<SelectListItem> OrderStatusList { get; set; }
-        
+        public List<SelectListItem> OrderStatusList { get; set; } = new List<SelectListItem>();
+
         [BindProperty]
         public Order Order { get; set; } = default!;
+
+
 
         public IActionResult OnGet()
         {
@@ -40,12 +58,12 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
 
             // Sipariş durumu listeleme
             OrderStatusList = Enum.GetValues(typeof(OrderStatus))
-                .Cast<OrderStatus>()
-                .Select(s => new SelectListItem
-                {
-                    Value = ((int)s).ToString(),
-                    Text = s.ToString()
-                }).ToList();
+               .Cast<OrderStatus>()
+               .Select(s => new SelectListItem
+               {
+                   Value = ((int)s).ToString(),
+                   Text = $"{s.GetDescription()} " // Türkçe 
+               }).ToList();
 
             return Page();
         }
@@ -69,12 +87,12 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
                     }).ToList();
 
                 OrderStatusList = Enum.GetValues(typeof(OrderStatus))
-                    .Cast<OrderStatus>()
-                    .Select(s => new SelectListItem
-                    {
-                        Value = ((int)s).ToString(),
-                        Text = s.ToString()
-                    }).ToList();
+                   .Cast<OrderStatus>()
+                   .Select(s => new SelectListItem
+                   {
+                       Value = ((int)s).ToString(),
+                       Text = $"{s.GetDescription()}"
+                   }).ToList();
 
                 return Page();
             }

@@ -28,9 +28,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.OrderTime)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
+                <td>
+                    @item.Status.GetDescription()  <!-- Türkçe açıklama burada -->
+                </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Düzenle</a> |
                 <a asp-page="./Details" asp-route-id="@item.Id">Detaylar</a> |

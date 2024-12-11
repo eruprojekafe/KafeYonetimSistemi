@@ -19,8 +19,11 @@ public class Order
     public int Id { get; set; }
 
     [DataType(DataType.DateTime)]
-    public DateTime OrderTime { get; set; }
 
+    [Display(Name = "Sipariş Zamanı")]
+    public DateTime OrderTime { get; set; }
+    
+    [Display(Name = "Durum")]
     public OrderStatus Status { get; set; }
 
     [ForeignKey("TableId")]

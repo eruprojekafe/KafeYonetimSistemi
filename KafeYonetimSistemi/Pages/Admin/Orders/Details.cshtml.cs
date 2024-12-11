@@ -35,6 +35,7 @@ namespace KafeYonetimSistemi.Pages.Admin.Orders
             }
             else
             {
+
                 Order = order;
             }
             return Page();
