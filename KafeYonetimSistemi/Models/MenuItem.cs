@@ -14,6 +14,9 @@ public class MenuItem
     public decimal Price { get; set; }
     public bool IsAvailable { get; set; } = true;
 
+    // CategoryId ile Category tablosuna ilişki kuruyoruz
+    public int CategoryId { get; set; } // CategoryId özelliği
+
     [ForeignKey("CategoryId")]
     public Category Category { get; set; } = default!;
 }
