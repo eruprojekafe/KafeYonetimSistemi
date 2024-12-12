@@ -20,3 +20,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.bordered-form {
+    border: 2px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    margin-top: 20px;
+}
