@@ -1,16 +1,3 @@
-/*using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace KafeYonetimSistemi.Pages.Waiters
-{
-    public class IndexModel : PageModel
-    {
-        public void OnGet()
-        {
-        }
-    }
-}
-*/
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using KafeYonetimSistemi.Models;
@@ -36,11 +23,11 @@ namespace KafeYonetimSistemi.Pages.Waiters
 
         public async Task OnGetAsync()
         {
-            // Teslim edilmemi˛ sipari˛leri getir
+            // Teslim edilmemi√æ sipari√æleri getir
             Orders = await _context.Order
                 .Where(o => o.Status != OrderStatus.Delivered) // Enum ile filtreleme
-                .Include(o => o.MenuItems) // Men¸ ˆelerini de dahil et
-                .Include(o => o.Table)     // Masay˝ da dahil et
+                .Include(o => o.MenuItems) // Men√º √∂√∞elerini de dahil et
+                .Include(o => o.Table)     // Masay√Ω da dahil et
                 .ToListAsync();
         }
     }
