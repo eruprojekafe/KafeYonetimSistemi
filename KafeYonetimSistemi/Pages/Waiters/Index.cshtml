@@ -1,0 +1,48 @@
+﻿@page
+@model KafeYonetimSistemi.Pages.Waiters.IndexModel
+@{
+    ViewData["Title"] = "Garson Sipariş Görünümü";
+}
+
+<h1>Aktif Siparişler</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Masa</th>
+            <th>Durum</th>
+            <th>Ürünler</th>
+            <th>Sipariş Zamanı</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Orders != null && Model.Orders.Count > 0)
+        {
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.Table.TableNumber</td>
+                    <td>@order.Status</td>
+                    <td>
+                        <ul>
+                            @foreach (var item in order.MenuItems)
+                            {
+                                <li>@item.Name (@item.Price ₺)</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>@order.OrderTime.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5">Aktif sipariş bulunmamaktadır.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
