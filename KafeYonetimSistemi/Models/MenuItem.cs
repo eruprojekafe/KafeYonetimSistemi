@@ -8,10 +8,13 @@ public class MenuItem
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-
+    [Display(Name = "Ürün Adı")]
     public string Name { get; set; } = default!;
+    [Display(Name = "Açıklama")]
     public string Description { get; set; } = default!;
+    [Display(Name = "Fiyat")]
     public decimal Price { get; set; }
+    [Display(Name = "Mevcut mu?")]
     public bool IsAvailable { get; set; } = true;
 
     // CategoryId ile Category tablosuna ilişki kuruyoruz
