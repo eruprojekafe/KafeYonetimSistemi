@@ -1,0 +1,76 @@
+﻿@page "{tableNumber:int}"
+@model KafeYonetimSistemi.Pages.QrCodeList.QrCodeListModel
+
+@{
+    ViewData["Title"] = "Menü";
+}
+
+<h1>Menü</h1>
+
+<p>
+    Tüm menü seçeneklerini aşağıda görebilirsiniz.
+</p>
+
+<!-- Kategoriler -->
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link @(Model.SelectedCategoryId == null ? "active" : "")"
+           asp-page="."
+           asp-route-tableNumber="@Model.TableNumber">Tümü</a>
+    </li>
+    @if (Model.Categories != null && Model.Categories.Any())
+    {
+        @foreach (var category in Model.Categories)
+        {
+            <li class="nav-item">
+                <a class="nav-link @(Model.SelectedCategoryId == category.Id ? "active" : "")"
+                   asp-page="."
+                   asp-route-tableNumber="@Model.TableNumber"
+                   asp-route-categoryId="@category.Id">
+                    @category.Name
+                </a>
+            </li>
+        }
+    }
+</ul>
+
+<!-- Menü -->
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>İsim</th>
+            <th>Ürün Detayları</th>
+            <th>Fiyatı</th>
+            <th>Durum</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.MenuItem != null && Model.MenuItem.Any())
+        {
+            @foreach (var item in Model.MenuItem)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>
+                        @if (item.IsAvailable)
+                        {
+                            <span class="text-success font-weight-bold">Mevcut</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger font-weight-bold">Tükendi</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center">Bu kategoride herhangi bir öğe bulunmamaktadır.</td>
+            </tr>
+        }
+    </tbody>
+</table>
