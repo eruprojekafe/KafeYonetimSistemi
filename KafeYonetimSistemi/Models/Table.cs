@@ -8,7 +8,10 @@ public class Table
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
+
+    [Display(Name = "Masa Numarası")]
     public int TableNumber { get; set; }
+    [Display(Name = "Müsait mi?")]
     public bool IsAvailable { get; set; } = true;
 
     [InverseProperty("Table")]

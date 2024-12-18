@@ -2,16 +2,24 @@
 @model KafeYonetimSistemi.Pages.Admin.MenuItems.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Ürün Oluştur";
 }
 
-<h1>Create</h1>
+<h1>Ürün Oluştur</h1>
 
-<h4>MenuItem</h4>
+<h4>Ürün</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
+            <div class="form-group">
+                <label asp-for="MenuItem.CategoryId">Kategori Seçimi</label>
+                <select asp-for="MenuItem.CategoryId" class="form-control" asp-items="Model.AvailableCategories">
+                    <option value="">-- Kategori Seçin --</option>
+                </select>
+                <span asp-validation-for="MenuItem.CategoryId" class="text-danger"></span>
+            </div>
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="MenuItem.Name" class="control-label"></label>
@@ -34,14 +42,14 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Ürün Oluştur" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a asp-page="Index">Listeye Geri Dön</a>
 </div>
 
 @section Scripts {
