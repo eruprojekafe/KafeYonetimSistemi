@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -18,32 +17,19 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         {
             _context = context;
         }
-
-        public int TableNumber { get; set; }
-        public int? SelectedCategoryId { get; set; }
-
-        public IList<MenuItem> MenuItem { get; set; } = new List<MenuItem>();
         public IList<Category> Categories { get; set; } = new List<Category>();
 
-        public async Task OnGetAsync(int tableNumber, int? categoryId)
+        public async Task OnGetAsync()
         {
-            TableNumber = tableNumber;
-            SelectedCategoryId = categoryId;
-
-            // Kategorileri çekecek 
-            Categories = await _context.Category.ToListAsync();
-
-            // Menü öğelerini kategoriye göre filtreleyecek 
-            if (categoryId.HasValue)
-            {
-                MenuItem = await _context.MenuItem
-                    .Where(m => m.Id == categoryId.Value)
-                    .ToListAsync();
-            }
-            else
-            {
-                MenuItem = await _context.MenuItem.ToListAsync();
-            }
+            // Tüm kategorileri getir
+            Categories = await _context.Category
+                .Select(c => new Category
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    ImageUrl = c.ImageUrl // Resim ve isim bilgisi
+                })
+                .ToListAsync();
         }
     }
 }
