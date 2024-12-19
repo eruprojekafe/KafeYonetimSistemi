@@ -23,6 +23,7 @@ namespace KafeYonetimSistemi.Data
         public DbSet<KafeYonetimSistemi.Models.Table> Table { get; set; } = default!;
         public DbSet<KafeYonetimSistemi.Models.MenuItem> MenuItem { get; set; } = default!;
         public DbSet<KafeYonetimSistemi.Models.Category> Category { get; set; } = default!;
+        public DbSet<KafeYonetimSistemi.Models.MenuItemTransaction> MenuItemTransaction { get; set; } = default!;
     }
 
 }
