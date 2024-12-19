@@ -1,7 +1,88 @@
 @page
+@model KafeYonetimSistemi.Pages.Admin.IndexModel
+
 @{
-    ViewData["Title"] = "Yönetici Kontrol Paneli";
+    ViewData["Title"] = "Sipariş Listesi";
 }
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Günlük siparişler grafiği -->
+<div>
+    <h2>Günlük Siparişler</h2>
+    <canvas id="dailyOrdersChart" width="300" height="150"></canvas>
+</div>
+
+<!-- Haftalık siparişler grafiği -->
+<div>
+    <h2>Haftalık Siparişler</h2>
+    <canvas id="weeklyOrdersChart" width="300" height="150"></canvas>
+</div>
+
+<!-- Aylık siparişler grafiği -->
+<div>
+    <h2>Aylık Siparişler</h2>
+    <canvas id="monthlyOrdersChart" width="300" height="150"></canvas>
+</div>
+
+<script>
+    // Günlük siparişler verisi
+    const dailyOrders = @Html.Raw(Json.Serialize(Model.DailyOrders));
+    const weeklyOrders = @Html.Raw(Json.Serialize(Model.WeeklyOrders));
+    const monthlyOrders = @Html.Raw(Json.Serialize(Model.MonthlyOrders));
+
+    // Sipariş durumu etiketleri (Created, Preparing, Ready, Delivered, Cancelled)
+    const orderStatusLabels = ["Oluşturuldu", "Hazırlanıyor", "Hazır", "Teslim Edildi", "İptal Edildi"];
+
+    // Günlük siparişler grafiği
+    var ctxDaily = document.getElementById('dailyOrdersChart').getContext('2d');
+    var dailyOrdersChart = new Chart(ctxDaily, {
+        type: 'bar',
+        data: {
+            labels: orderStatusLabels,
+            datasets: [{
+                label: 'Günlük Siparişler',
+                data: dailyOrders,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Haftalık siparişler grafiği
+    var ctxWeekly = document.getElementById('weeklyOrdersChart').getContext('2d');
+    var weeklyOrdersChart = new Chart(ctxWeekly, {
+        type: 'bar',
+        data: {
+            labels: orderStatusLabels,
+            datasets: [{
+                label: 'Haftalık Siparişler',
+                data: weeklyOrders,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Aylık siparişler grafiği
+    var ctxMonthly = document.getElementById('monthlyOrdersChart').getContext('2d');
+    var monthlyOrdersChart = new Chart(ctxMonthly, {
+        type: 'bar',
+        data: {
+            labels: orderStatusLabels,
+            datasets: [{
+                label: 'Aylık Siparişler',
+                data: monthlyOrders,
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
 
 <h1>Yönetici Kontrol Paneli</h1>
 
