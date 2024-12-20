@@ -12,5 +12,5 @@ public class Category
     public string Name { get; set; } = default!;
 
     // Yeni eklenen özellik
-    public string? ImageUrl { get; set; } = "logo.png";
+    public string? ImageUrl { get; set; } = null!;
 }
