@@ -7,24 +7,45 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KafeYonetimSistemi.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- FontAwesome -->
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Kafe Yönetim Sistemi</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Ana Sayfa</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+                <!-- Koşullu Navbar Başlık ve Ana Sayfa Linki -->
+                @if (!ViewContext.ActionDescriptor.DisplayName.Contains("QrCodeList"))
+                {
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">Kafe Yönetim Sistemi</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Ana Sayfa</a>
+                            </li>
+                        </ul>
+
+                        <!-- Koşullu Login/Signup -->
+                        <partial name="_LoginPartial" />
+                    </div>
+                }
+                <!-- QR Code Sayfası İçin Hoşgeldiniz Metni ve İkon -->
+                @if (ViewContext.ActionDescriptor.DisplayName.Contains("QrCodeList"))
+                {
+                    <div class="d-flex justify-content-center align-items-center w-100">
+                        <span class="fw-bold" style="font-style: italic; flex-grow: 1; text-align: center;">Freesia Kafeye Hoşgeldiniz</span>
+                        <a href="javascript:void(0);" class="btn btn-outline-dark position-relative" onclick="goToCart()">
+                            <i class="bi bi-cart" style="font-size: 2rem; position: relative;"></i> <!-- Sepet İkonu -->
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count" style="font-size: 1rem; padding: 0.2rem 0.5rem;">
+                                0
+                            </span>
+                        </a>
+                    </div>
+                }
             </div>
         </nav>
     </header>
@@ -43,6 +64,30 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Sepet Sayaç İşlevi -->
+    <script>
+        let cart = []; // Sepet dizisi
+
+        // Sepet sayacını güncelleme
+        function updateCartCount() {
+            document.getElementById("cart-count").innerText = cart.length; // Sepetteki ürün sayısını göster
+        }
+
+        // Ürünü sepete ekleme
+        function addToCart(productName) {
+            cart.push(productName); // Ürünü sepete ekle
+            updateCartCount(); // Sayacı güncelle
+
+            // Sepet içeriğini kontrol amaçlı loglayın
+            console.log("Sepet İçeriği:", cart);
+        }
+
+        // Sepet sayfasına yönlendirme
+        function goToCart() {
+            window.location.href = "/Cart"; // Sepet sayfasına yönlendirme
+        }
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
