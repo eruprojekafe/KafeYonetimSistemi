@@ -8,6 +8,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.CategoryName Menü Listesi</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .card {
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+            height: auto; /* Kart yüksekliği içeriğe göre otomatik */
+        }
+
+        .card-img-top {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* Resmi kare yapar */
+            object-fit: cover; /* Resmi düzgünce keser */
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Fiyat ve butonun her zaman altta kalmasını sağlar */
+        }
+
+        .card-text.description {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* Yazı tek satır olur */
+            cursor: pointer; /* Tıklanabilir olduğunu belirtir */
+            transition: all 0.3s ease-in-out;
+        }
+
+            .card-text.description.expanded {
+                white-space: normal; /* Çok satırlı olur */
+                overflow: visible; /* Taşan yazıyı gösterir */
+            }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -18,11 +50,14 @@
             <div class="row">
                 @foreach (var item in Model.MenuItems)
                 {
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-4 mb-4 d-flex">
                         <div class="card">
+                            <img src="@(item.ImageUrl ?? "/images/logo.png")" class="card-img-top" alt="Image" />
                             <div class="card-body">
                                 <h5 class="card-title">@item.Name</h5>
-                                <p class="card-text">@item.Description</p>
+                                <!-- Açıklama kısmı -->
+                                <p class="card-text description" onclick="toggleExpand(this)">@item.Description</p>
+                                <!-- Fiyat ve Satın Al -->
                                 <p class="card-text"><strong>Fiyat:</strong> @item.Price.ToString("C")</p>
                                 @if (item.IsAvailable)
                                 {
@@ -43,5 +78,12 @@
             <p class="text-center text-danger">Bu kategoriye ait menü öğesi bulunmamaktadır.</p>
         }
     </div>
+
+    <script>
+        function toggleExpand(element) {
+            // Açıklama kısmını genişlet/daralt
+            element.classList.toggle('expanded');
+        }
+    </script>
 </body>
 </html>
