@@ -5,46 +5,45 @@
     ViewData["Title"] = "Ürünü Düzenle";
 }
 
-<h1>Ürünü Düzenle</h1>
+<h1 class="mb-4">Ürünü Düzenle</h1>
 
-<h4>Ürün</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MenuItem.Id" />
-            <div class="form-group">
-                <label asp-for="MenuItem.Name" class="control-label"></label>
-                <input asp-for="MenuItem.Name" class="form-control" />
-                <span asp-validation-for="MenuItem.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MenuItem.Description" class="control-label"></label>
-                <input asp-for="MenuItem.Description" class="form-control" />
-                <span asp-validation-for="MenuItem.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MenuItem.Price" class="control-label"></label>
-                <input asp-for="MenuItem.Price" class="form-control" />
-                <span asp-validation-for="MenuItem.Price" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="MenuItem.IsAvailable" /> @Html.DisplayNameFor(model => model.MenuItem.IsAvailable)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+<div class="bordered-form">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="MenuItem.Id" />
 
-<div>
-    <a asp-page="./Index">Listeye Geri Dön</a>
+        <div class="form-group mb-4">
+            <label asp-for="MenuItem.Name" class="form-label">Ürün Adı</label>
+            <input asp-for="MenuItem.Name" class="form-control" />
+            <span asp-validation-for="MenuItem.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-4">
+            <label asp-for="MenuItem.Description" class="form-label">Açıklama</label>
+            <input asp-for="MenuItem.Description" class="form-control" />
+            <span asp-validation-for="MenuItem.Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-4">
+            <label asp-for="MenuItem.Price" class="form-label">Fiyat</label>
+            <input asp-for="MenuItem.Price" class="form-control" />
+            <span asp-validation-for="MenuItem.Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-4">
+            <input class="form-check-input" asp-for="MenuItem.IsAvailable" />
+            <label class="form-check-label" asp-for="MenuItem.IsAvailable">Mevcut</label>
+        </div>
+
+        <div class="d-flex gap-3">
+            <input type="submit" value="Kaydet" class="btn btn-primary" />
+            <a asp-page="./Index" class="btn btn-secondary">İptal</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

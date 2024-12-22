@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-4">
         <form method="post">
-            <div class="form-group">
+            <div class="form-group mb-5">
                 <label asp-for="Order.Table">Masa Seçimi</label>
                 <select asp-for="Order.Table.Id" class="form-control" asp-items="Model.AvailableTables">
                     <option value="">-- Masa Seçin --</option>
@@ -21,12 +21,12 @@
             </div>
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group mb-5">
                 <label asp-for="Order.OrderTime" class="control-label"></label>
                 <input asp-for="Order.OrderTime" class="form-control" />
                 <span asp-validation-for="Order.OrderTime" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-5">
                 <div class="form-group">
                     <label asp-for="Order.Status">Sipariş Durumu</label>
                     <select asp-for="Order.Status" class="form-control" asp-items="Model.OrderStatusList">
@@ -35,7 +35,7 @@
                     <span asp-validation-for="Order.Status" class="text-danger"></span>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-5">
                 <input type="submit" value="Oluştur" class="btn btn-primary" />
             </div>
         </form>
@@ -43,9 +43,12 @@
 </div>
 
 <div>
-    <a asp-page="Index">Listeye Geri Dön</a>
+    <a asp-page="./Index" class="btn btn-secondary">Listeye Geri Dön</a>
 </div>
 
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
