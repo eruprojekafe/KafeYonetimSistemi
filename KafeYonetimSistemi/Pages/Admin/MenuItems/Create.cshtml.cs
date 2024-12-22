@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using KafeYonetimSistemi.Data;
 using KafeYonetimSistemi.Models;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace KafeYonetimSistemi.Pages.Admin.MenuItems
 {
@@ -42,28 +44,21 @@ namespace KafeYonetimSistemi.Pages.Admin.MenuItems
         // Menü öğesi oluşturma işlemi
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                // Model geçersizse kategorileri tekrar yükle
-                AvailableCategories = _context.Category
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.Id.ToString(),
-                        Text = c.Name
-                    }).ToList();
-
-                return Page();
-            }
-
-            // Kategori seçilmezse hata
             var category = _context.Category.FirstOrDefault(c => c.Id == MenuItem.CategoryId);
             if (category == null)
             {
-                ModelState.AddModelError("MenuItem.CategoryId", "Geçersiz kategori seçimi.");
-                return Page();
+                ModelState.AddModelError("MenuItem.Category", "Geçersiz kategori seçimi.");
+                return OnGet();
             }
+            MenuItem.Category = category;
 
-            MenuItem.Category = category; // Kategoriyi ilişkilendir
+            ModelState.Clear();
+            TryValidateModel(MenuItem);
+
+            if (!ModelState.IsValid)
+            {
+                return OnGet();
+            }
 
             // Menü öğesini veritabanına ekle
             _context.MenuItem.Add(MenuItem);
