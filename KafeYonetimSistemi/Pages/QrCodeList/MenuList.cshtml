@@ -1,4 +1,4 @@
-﻿@page "{categoryId:int}"
+﻿@page "/MenuList/{categoryId:int}"
 @model KafeYonetimSistemi.Pages.MenuList.MenuListModel
 
 <!DOCTYPE html>
@@ -13,14 +13,13 @@
     <div class="container mt-5">
         <h1 class="text-center">@Model.CategoryName Menü Listesi</h1>
 
-        @if (Model.MenuItems.Count > 0)
+        @if (Model.MenuItems.Any())
         {
             <div class="row">
                 @foreach (var item in Model.MenuItems)
                 {
                     <div class="col-md-4 mb-4">
                         <div class="card">
-                            
                             <div class="card-body">
                                 <h5 class="card-title">@item.Name</h5>
                                 <p class="card-text">@item.Description</p>

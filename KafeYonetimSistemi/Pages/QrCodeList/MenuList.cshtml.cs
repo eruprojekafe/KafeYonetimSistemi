@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using KafeYonetimSistemi.Data;
 using KafeYonetimSistemi.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KafeYonetimSistemi.Pages.MenuList
 {
@@ -20,19 +21,24 @@ namespace KafeYonetimSistemi.Pages.MenuList
         public string CategoryName { get; set; } = string.Empty;
         public IList<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
 
-        public async Task OnGetAsync(int categoryId)
+        public async Task<IActionResult> OnGetAsync(int categoryId)
         {
             // Kategori adına erişim
             var category = await _context.Category.FirstOrDefaultAsync(c => c.Id == categoryId);
-            if (category != null)
+            if (category == null)
             {
-                CategoryName = category.Name;
+                // Eğer kategori bulunamazsa, kullanıcıyı ana sayfaya yönlendir
+                return RedirectToPage("/QrCodeList");
             }
+
+            CategoryName = category.Name;
 
             // Seçilen kategoriye ait menü öğelerini getir
             MenuItems = await _context.MenuItem
                 .Where(m => m.CategoryId == categoryId)
                 .ToListAsync();
+
+            return Page();
         }
     }
 }
