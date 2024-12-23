@@ -12,32 +12,86 @@
         .card {
             transition: all 0.3s ease-in-out;
             overflow: hidden;
-            height: auto; /* Kart yüksekliği içeriğe göre otomatik */
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .card-img-top {
             width: 100%;
-            aspect-ratio: 1 / 1; /* Resmi kare yapar */
-            object-fit: cover; /* Resmi düzgünce keser */
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
 
         .card-body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Fiyat ve butonun her zaman altta kalmasını sağlar */
+            justify-content: space-between;
+            padding: 15px;
         }
 
         .card-text.description {
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap; /* Yazı tek satır olur */
-            cursor: pointer; /* Tıklanabilir olduğunu belirtir */
+            white-space: nowrap;
+            cursor: pointer;
             transition: all 0.3s ease-in-out;
         }
 
             .card-text.description.expanded {
-                white-space: normal; /* Çok satırlı olur */
-                overflow: visible; /* Taşan yazıyı gösterir */
+                white-space: normal;
+                overflow: visible;
+            }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .quantity-controls button {
+                width: 35px;
+                height: 35px;
+                background-color: skyblue;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 18px;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+                .quantity-controls button:hover {
+                    background-color: skyblue;
+                }
+
+            .quantity-controls input {
+                width: 60px;
+                height: 35px;
+                text-align: center;
+                font-size: 18px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin: 0 10px;
+                padding: 5px;
+            }
+
+                .quantity-controls input:focus {
+                    outline: none;
+                    border-color: skyblue;
+                }
+
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+            font-size: 16px;
+        }
+
+            .btn-primary:hover {
+                background-color: #218838;
+                border-color: #1e7e34;
             }
     </style>
 </head>
@@ -55,18 +109,24 @@
                             <img src="@(item.ImageUrl ?? "/images/logo.png")" class="card-img-top" alt="Image" />
                             <div class="card-body">
                                 <h5 class="card-title">@item.Name</h5>
-                                <!-- Açıklama kısmı -->
                                 <p class="card-text description" onclick="toggleExpand(this)">@item.Description</p>
-                                <!-- Fiyat ve Satın Al -->
                                 <p class="card-text"><strong>Fiyat:</strong> @item.Price.ToString("C")</p>
-                                @if (item.IsAvailable)
-                                {
-                                    <a href="#" class="btn btn-success">Satın Al</a>
-                                }
-                                else
-                                {
-                                    <button class="btn btn-secondary" disabled>Stokta Yok</button>
-                                }
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="quantity-controls">
+                                        <button class="btn btn-secondary" onclick="changeQuantity(@item.Id, -1)">-</button>
+                                        <input type="number" class="form-control" id="quantity-@item.Id" min="1" value="1" style="width: 60px;" readonly />
+                                        <button class="btn btn-secondary" onclick="changeQuantity(@item.Id, 1)">+</button>
+                                    </div>
+                                    @if (item.IsAvailable)
+                                    {
+                                        <button class="btn btn-primary" onclick="addToCart(@item.Id)">Sepete Ekle</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-secondary" disabled>Stokta Yok</button>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,8 +141,25 @@
 
     <script>
         function toggleExpand(element) {
-            // Açıklama kısmını genişlet/daralt
             element.classList.toggle('expanded');
+        }
+
+        function changeQuantity(itemId, change) {
+            var quantityInput = document.getElementById('quantity-' + itemId);
+            var currentQuantity = parseInt(quantityInput.value);
+            var newQuantity = currentQuantity + change;
+
+            // Adet 1'in altına düşmesin
+            if (newQuantity >= 1) {
+                quantityInput.value = newQuantity;
+            }
+        }
+
+        function addToCart(itemId) {
+            var quantity = document.getElementById('quantity-' + itemId).value;
+            console.log("Ürün ID: " + itemId + ", Adet: " + quantity);
+            // Burada sepete ekleme işlemi yapılacak.
+            // Örneğin, AJAX veya Form gönderimi ile server'a veri gönderebilirsiniz.
         }
     </script>
 </body>
