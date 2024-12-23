@@ -1,0 +1,25 @@
+﻿@page
+@model KafeYonetimSistemi.Pages.QrCodeList.CartModel
+@{
+    ViewData["Title"] = "Sepet";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepetim</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Sepetim</h1>
+        <div id="cartContents" class="mt-3"></div>
+        <button class="btn btn-success mt-3" onclick="submitCart()">Ödeme Yap</button>
+        <script src="~/js/cart.js" asp-append-version="true"></script>
+        <script>
+            loadCart();
+        </script>
+    </div>
+</body>
+</html>

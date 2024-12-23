@@ -38,9 +38,9 @@
                 {
                     <div class="d-flex justify-content-center align-items-center w-100">
                         <span class="fw-bold" style="font-style: italic; flex-grow: 1; text-align: center;">Freesia Kafeye Hoşgeldiniz</span>
-                        <a href="javascript:void(0);" class="btn btn-outline-dark position-relative" onclick="goToCart()">
-                            <i class="bi bi-cart" style="font-size: 2rem; position: relative;"></i> <!-- Sepet İkonu -->
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count" style="font-size: 1rem; padding: 0.2rem 0.5rem;">
+                        <a href="javascript:void(0);" class="btn btn-outline-dark position-relative" onclick="location.href='/QrCodeList/Cart';">
+                            <i class="bi bi-cart" style="font-size: 2rem;"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
                                 0
                             </span>
                         </a>
@@ -66,29 +66,10 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <!-- Sepet Sayaç İşlevi -->
+    <script src="~/js/cart.js" asp-append-version="true"></script>
     <script>
-        let cart = []; // Sepet dizisi
-
-        // Sepet sayacını güncelleme
-        function updateCartCount() {
-            document.getElementById("cart-count").innerText = cart.length; // Sepetteki ürün sayısını göster
-        }
-
-        // Ürünü sepete ekleme
-        function addToCart(productName) {
-            cart.push(productName); // Ürünü sepete ekle
-            updateCartCount(); // Sayacı güncelle
-
-            // Sepet içeriğini kontrol amaçlı loglayın
-            console.log("Sepet İçeriği:", cart);
-        }
-
-        // Sepet sayfasına yönlendirme
-        function goToCart() {
-            window.location.href = "/Cart"; // Sepet sayfasına yönlendirme
-        }
+        updateCartCount();
     </script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
