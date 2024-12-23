@@ -7,10 +7,12 @@
 
 <h1 class="mb-4">Ürün Sil</h1>
 
-<div class="bordered-form">
+
     <div class="alert alert-warning text-center" role="alert" style="font-size: 1.2rem; margin-bottom: 20px;">
         <strong>Bu kaydı silmek istediğinize emin misiniz?</strong>
     </div>
+<div class="bordered-form">
+    <h4 class="fw-bold text-dark mb-3">ÜRÜN</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-3">Adı</dt>
@@ -26,9 +28,9 @@
         <dd class="col-sm-9">@Html.DisplayFor(model => model.MenuItem.IsAvailable)</dd>
     </dl>
 
-    <form method="post" class="d-flex gap-3">
+    <form method="post" class="d-flex gap-3 mt-4">
         <input type="hidden" asp-for="MenuItem.Id" />
-        <input type="submit" value="Sil" class="btn btn-danger" />
+        <input type="submit" value="Sil" class="btn btn-danger" /> 
         <a asp-page="./Index" class="btn btn-secondary">Listeye Geri Dön</a>
     </form>
 </div>

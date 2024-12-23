@@ -12,6 +12,8 @@
 </div>
 
 <div class="bordered-form">
+    <h4 class="fw-bold text-dark mb-3">KATEGORİ</h4>
+    <hr />
     <dl class="row">
         <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Category.Name)
@@ -21,9 +23,9 @@
         </dd>
     </dl>
 
-    <form method="post" class="mt-4">
+    <form method="post" class="d-flex gap-3 mt-4">
         <input type="hidden" asp-for="Category.Id" />
-        <input type="submit" value="Kategoriyi Sil" class="btn btn-danger" />
-        <a asp-page="./Index" class="btn btn-secondary ms-2">Listeye Geri Dön</a>
+        <input type="submit" value="Sil" class="btn btn-danger" />
+        <a asp-page="./Index" class="btn btn-secondary">Listeye Geri Dön</a>
     </form>
 </div>
