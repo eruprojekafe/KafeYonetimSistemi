@@ -26,7 +26,6 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         }
 
         // Sepet verilerini sunucuya POST iþlemiyle al ve iþleme koy
-        [HttpPost]
         public IActionResult OnPost([FromBody] List<CartItemDto> cartItems)
         {
             if (cartItems == null || !cartItems.Any())
@@ -57,8 +56,6 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
                 };
             }).ToList();
 
-            // (Örneðin ödeme iþlemi baþlatýlabilir veya sepet kaydedilebilir.)
-
             // Ýþlem baþarýlý
             return new JsonResult(new { message = "Sepet baþarýyla iþlendi.", CartItems });
         }
@@ -68,7 +65,7 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
     public class CartItemDto
     {
         public int MenuItemId { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
     }
