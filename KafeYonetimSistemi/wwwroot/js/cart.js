@@ -1,8 +1,18 @@
 ﻿let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+// Sepeti localStorage'dan almak için yardımcı bir fonksiyon
+function getCart() {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+}
+
+// Sepeti localStorage'da güncellemek için yardımcı bir fonksiyon
+function setCart(cart) {
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
 // Sepet sayacını güncelleme
 function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = getCart();
     const totalItems = cart.reduce((sum, item) => sum + item.Quantity, 0); // Tüm ürünlerin miktarlarını topla
     const cartCountElement = document.getElementById("cart-count");
 
@@ -13,7 +23,7 @@ function updateCartCount() {
 
 // Ürün ekleme
 function addToCart(menuItemId, name, price) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = getCart();
     const existingItem = cart.find(item => item.MenuItemId === menuItemId);
 
     if (existingItem) {
@@ -22,7 +32,7 @@ function addToCart(menuItemId, name, price) {
         cart.push({ MenuItemId: menuItemId, Name: name, Price: price, Quantity: 1 });
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    setCart(cart); // Sepeti güncelle
     updateCartCount(); // İkonu güncelle
     alert('Ürün sepete eklendi!'); // Ürün eklenme mesajı
     loadCart();
@@ -30,7 +40,7 @@ function addToCart(menuItemId, name, price) {
 
 // Sepet içeriğini localStorage'dan yükle ve göster
 function loadCart() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = getCart();
     const cartContents = document.getElementById('cartContents');
     cartContents.innerHTML = '';
 
@@ -60,21 +70,21 @@ function loadCart() {
 
 // Sepetten ürün çıkarma
 function removeFromCart(index) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = getCart();
     cart[index].Quantity--; // Miktarı azalt
 
     if (cart[index].Quantity === 0) {
         cart.splice(index, 1); // Ürün miktarı sıfırsa tamamen kaldır
     }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    setCart(cart); // Sepeti güncelle
     loadCart(); // Sepeti güncelle
     updateCartCount(); // İkonu güncelle
 }
 
 // Ödeme işlemini başlatma
 function submitCart() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cart = getCart();
     if (cart.length === 0) {
         alert('Sepetiniz boş!');
         return;
