@@ -7,12 +7,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@Model.CategoryName Menü Listesi</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         .card {
             transition: all 0.3s ease-in-out;
-            overflow: hidden;
-            height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -25,74 +23,54 @@
             border-top-right-radius: 10px;
         }
 
-        .card-body {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 15px;
-        }
-
-        .card-text.description {
+        .description {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.3s ease-in-out;
         }
 
-            .card-text.description.expanded {
+        .description.expanded {
                 white-space: normal;
                 overflow: visible;
-            }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-            .quantity-controls button {
-                width: 35px;
-                height: 35px;
-                background-color: skyblue;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                font-size: 18px;
-                cursor: pointer;
-                transition: background-color 0.2s;
-            }
-
-                .quantity-controls button:hover {
-                    background-color: skyblue;
-                }
-
-            .quantity-controls input {
-                width: 60px;
-                height: 35px;
-                text-align: center;
-                font-size: 18px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                margin: 0 10px;
-                padding: 5px;
-            }
-
-                .quantity-controls input:focus {
-                    outline: none;
-                    border-color: skyblue;
-                }
-
-        .btn-primary {
+        .cart-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             background-color: #28a745;
-            border-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
             font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
         }
 
-            .btn-primary:hover {
+        .cart-button:hover {
                 background-color: #218838;
-                border-color: #1e7e34;
-            }
+        }
+        .category-return-button {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(300%);
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: cadetblue;
+            color: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .category-return-button:hover {
+            background-color: #5f9ea0;
+            transform: translateX(300%) scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -105,7 +83,7 @@
                 @foreach (var item in Model.MenuItems)
                 {
                     <div class="col-md-4 mb-4 d-flex">
-                        <div class="card">
+                        <div class="card w-100">
                             <img src="@(item.ImageUrl ?? "/images/logo.png")" class="card-img-top" alt="Image" />
                             <div class="card-body">
                                 <h5 class="card-title">@item.Name</h5>
@@ -113,18 +91,18 @@
                                 <p class="card-text"><strong>Fiyat:</strong> @item.Price.ToString("C")</p>
 
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div class="quantity-controls">
+                                    <div class="input-group">
                                         <button class="btn btn-secondary" onclick="changeQuantity(@item.Id, -1)">-</button>
-                                        <input type="number" class="form-control" id="quantity-@item.Id" min="1" value="1" style="width: 60px;" readonly />
+                                        <input type="number" class="form-control text-center" id="quantity-@item.Id" value="1" min="1" readonly />
                                         <button class="btn btn-secondary" onclick="changeQuantity(@item.Id, 1)">+</button>
                                     </div>
                                     @if (item.IsAvailable)
                                     {
-                                        <button class="btn btn-primary" onclick="addToCart(@item.Id)">Sepete Ekle</button>
+                                        <button class="btn btn-primary ms-2" onclick="handleAddToCart(@item.Id, '@item.Name', @item.Price)">Sepete Ekle</button>
                                     }
                                     else
                                     {
-                                        <button class="btn btn-secondary" disabled>Stokta Yok</button>
+                                        <button class="btn btn-secondary ms-2" disabled>Stokta Yok</button>
                                     }
                                 </div>
                             </div>
@@ -137,30 +115,13 @@
         {
             <p class="text-center text-danger">Bu kategoriye ait menü öğesi bulunmamaktadır.</p>
         }
+
+        <!-- Kategorilere Git Butonu -->
+        <a href="/QrCodeList/@Model.TableNumber" class="btn btn-link btn-lg category-return-button" > Menüye Dön</a>
+
     </div>
 
-    <script>
-        function toggleExpand(element) {
-            element.classList.toggle('expanded');
-        }
-
-        function changeQuantity(itemId, change) {
-            var quantityInput = document.getElementById('quantity-' + itemId);
-            var currentQuantity = parseInt(quantityInput.value);
-            var newQuantity = currentQuantity + change;
-
-            // Adet 1'in altına düşmesin
-            if (newQuantity >= 1) {
-                quantityInput.value = newQuantity;
-            }
-        }
-
-        function addToCart(itemId) {
-            var quantity = document.getElementById('quantity-' + itemId).value;
-            console.log("Ürün ID: " + itemId + ", Adet: " + quantity);
-            // Burada sepete ekleme işlemi yapılacak.
-            // Örneğin, AJAX veya Form gönderimi ile server'a veri gönderebilirsiniz.
-        }
-    </script>
+    <script src="/js/cart.js"></script>
+    <script src="/js/menulist.js"></script> 
 </body>
 </html>

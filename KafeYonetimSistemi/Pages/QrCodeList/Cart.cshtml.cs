@@ -14,14 +14,17 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         {
             _context = context;
         }
-
+        public int TableNumber { get; set; }
         // Kullanýcýya gönderilecek ürünlerin listesi
         public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
 
         // Sepet sayfasýný yüklendiðinde çaðrýlacak
         public IActionResult OnGet()
         {
-            // Sepet, client-side'da saklanýyor. OnGet için backend'den iþlem yapýlmaz.
+            if (Request.Query.ContainsKey("tableNumber"))
+            {
+                TableNumber = Convert.ToInt32(Request.Query["tableNumber"]);
+            }
             return Page();
         }
 

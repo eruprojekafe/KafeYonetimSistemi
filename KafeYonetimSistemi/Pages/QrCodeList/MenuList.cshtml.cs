@@ -17,12 +17,14 @@ namespace KafeYonetimSistemi.Pages.MenuList
         {
             _context = context;
         }
-
+        public int TableNumber { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public IList<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
 
-        public async Task<IActionResult> OnGetAsync(int categoryId)
+        public async Task<IActionResult> OnGetAsync(int categoryId, int tableNumber)
         {
+            TableNumber = tableNumber;  // tableNumber'ı modelin içine alıyoruz
+
             // Kategori adına erişim
             var category = await _context.Category.FirstOrDefaultAsync(c => c.Id == categoryId);
             if (category == null)

@@ -63,7 +63,7 @@
             {
                 @foreach (var category in Model.Categories)
                 {
-                    <div class="category-box" data-category-id="@category.Id" onclick="location.href='/MenuList/@category.Id'">
+                    <div class="category-box" data-category-id="@category.Id" onclick="location.href='/MenuList/@category.Id?tableNumber=@Model.TableNumber'">
                         <img src="@(string.IsNullOrEmpty(category.ImageUrl) ? "/images/logo.png" : category.ImageUrl)"
                              class="category-image" />
                         <p class="category-text">@category.Name</p>

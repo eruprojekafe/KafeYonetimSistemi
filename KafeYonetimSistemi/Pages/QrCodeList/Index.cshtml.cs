@@ -12,15 +12,17 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
     public class QrCodeListModel : PageModel
     {
         private readonly KafeYonetimSistemi.Data.ApplicationDbContext _context;
-
+        public int TableNumber { get; set; }
         public QrCodeListModel(KafeYonetimSistemi.Data.ApplicationDbContext context)
         {
             _context = context;
         }
         public IList<Category> Categories { get; set; } = new List<Category>();
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int tableNumber)
         {
+            TableNumber = tableNumber;  // tableNumber'ı modelin içine alıyoruz
+
             // Tüm kategorileri getir
             Categories = await _context.Category
                 .Select(c => new Category
