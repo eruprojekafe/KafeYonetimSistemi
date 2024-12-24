@@ -5,39 +5,44 @@
     ViewData["Title"] = "Sipariş Listesi";
 }
 
-<h1>Sipariş Listesi</h1>
+<h1 class="mb-4">Sipariş Listesi</h1>
 
 <p>
-    <a asp-page="Create">Yeni Sipariş Oluştur</a>
+    <a asp-page="Create" class="btn btn-success">Yeni Sipariş Oluştur</a>
 </p>
-<table class="table">
+
+<table class="table table-bordered table-striped bordered-form">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].OrderTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order[0].Status)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(model => model.Order[0].OrderTime)</th>
+            <th>@Html.DisplayNameFor(model => model.Order[0].Status)</th>
+            <th>Aksiyonlar</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Order) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderTime)
-            </td>
+        @foreach (var item in Model.Order)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.OrderTime)</td>
+                <td>@item.Status.GetDescription()</td> <!-- Türkçe açıklama burada -->
                 <td>
-                    @item.Status.GetDescription()  <!-- Türkçe açıklama burada -->
+                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Düzenle</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Detaylar</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Sil</a>
                 </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Düzenle</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Detaylar</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Sil</a>
-            </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<style>
+    .table th, .table td {
+        padding: 15px;
+        vertical-align: middle;
+    }
+</style>

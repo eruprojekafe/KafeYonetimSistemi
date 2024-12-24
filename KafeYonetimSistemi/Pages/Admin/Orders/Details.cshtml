@@ -5,11 +5,13 @@
     ViewData["Title"] = "Sipariş Detayları";
 }
 
-<h1>Sipariş Detayları</h1>
+<h1 class="mb-4">Sipariş Detayları</h1>
+
+<h4 class="fw-bold text-dark mb-3">SİPARİŞ</h4>
+<hr />
 
 <div>
-    <h4>Sipariş</h4>
-    <hr />
+    
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Order.OrderTime)
@@ -25,9 +27,9 @@
             @Model.Order.Status.GetDescription()
         </dd>
     </dl>
+    <div class="form-group mb-5">
+        <a asp-page="./Edit" asp-route-id="@Model.Order.Id" class="btn btn-warning">Düzenle</a> |
+        <a asp-page="./Index" class="btn btn-secondary">Listeye Geri Dön</a>
+    </div>
 </div>
 
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Order.Id">Düzenle</a> |
-    <a asp-page="./Index">Listeye Geri Dön</a>
-</div>

@@ -8,38 +8,36 @@
 
 <h4 class="fw-bold text-dark mb-3">MASA</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post" class="bordered-form">
+
+<div class="bordered-form">
+    <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-     
-            <div class="form-group mb-5">
+
+        <div class="form-group mb-3">
                 <label asp-for="Table.TableNumber" class="control-label"></label>
                 <input asp-for="Table.TableNumber" class="form-control" />
                 <span asp-validation-for="Table.TableNumber" class="text-danger"></span>
             </div>
-
-    
-            <div class="form-group mb-5 form-check-input mb-5" style="margin-top: 50px;">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Table.IsAvailable" />
+ 
+        <div class="form-group mb-3">
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="Table.IsAvailable" />
+                <label class="form-check-label" asp-for="Table.IsAvailable">
                     @Html.DisplayNameFor(model => model.Table.IsAvailable)
                 </label>
             </div>
+        </div>
 
-        
-            <div class="form-group mb-5">
-                <input type="submit" value="Oluştur" class="btn btn-primary" style="margin-top: 50px;" />
-            </div>
-        </form>
-    </div>
+        <div class="form-group mb-3">
+                <input type="submit" value="Oluştur" class="btn btn-primary" />
+                <a asp-page="./Index" class="btn btn-secondary ms-2">Listeye Geri Dön</a>
+        </div>
+    </form>
 </div>
 
 
-<div style="margin-top: 50px;">
-    <a asp-page="Index" class="btn btn-secondary" style="margin-right: 50px;">Listeye Geri Dön</a>
-</div>
+
 
 @section Scripts {
     @{

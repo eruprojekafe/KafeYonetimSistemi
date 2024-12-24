@@ -5,29 +5,24 @@
     ViewData["Title"] = "Kategorileri Düzenle";
 }
 
-<h1>Kategorileri Düzenle</h1>
-
-<h4>Kategori</h4>
+<h1 class="mb-4">Kategorileri Düzenle</h1>
+<h4 class="fw-bold text-dark mb-3">KATEGORİ</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Category.Id" />
-            <div class="form-group">
-                <label asp-for="Category.Name" class="control-label"></label>
-                <input asp-for="Category.Name" class="form-control" />
-                <span asp-validation-for="Category.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-page="./Index">Listeye Geri Dön</a>
+<div class="bordered-form">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Category.Id" />
+        <div class="form-group mb-4">
+            <label asp-for="Category.Name" class="control-label"></label>
+            <input asp-for="Category.Name" class="form-control" />
+            <span asp-validation-for="Category.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Kaydet" class="btn btn-primary" />
+            <a asp-page="./Index" class="btn btn-secondary ms-2">İptal</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
