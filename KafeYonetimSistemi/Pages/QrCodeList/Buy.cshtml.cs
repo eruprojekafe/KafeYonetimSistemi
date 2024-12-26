@@ -27,11 +27,13 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         [BindProperty]
         public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>(); // Ensure CartItems is always initialized
 
-        [BindProperty]
-        public decimal TotalAmount { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public decimal TotalAmount { get; set; } // Toplam tutar
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(decimal totalAmount)
         {
+            TotalAmount = totalAmount;
+
             // Yalnýzca arka tarafta veri almak için gerekli deðil.
             // JavaScript ile localStorage'tan veri alýyoruz.
             return Page();
