@@ -17,6 +17,7 @@ namespace KafeYonetimSistemi.Pages.MenuList
         {
             _context = context;
         }
+        [BindProperty(SupportsGet = true)]
         public int TableNumber { get; set; }
         public string CategoryName { get; set; } = string.Empty;
         public IList<MenuItem> MenuItems { get; set; } = new List<MenuItem>();

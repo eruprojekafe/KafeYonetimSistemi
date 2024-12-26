@@ -156,8 +156,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <strong>Toplam Tutar:</strong> <span id="totalAmount">@Model.TotalAmount</span>₺
+                <div class="cart-summary" data-total-amount="@Model.TotalAmount">
+                    <p><strong>Toplam Tutar:</strong> <span id="totalAmount">@Model.TotalAmount</span> ₺</p>
                 </div>
                 <div class="button-group">
                     <button type="submit" class="submit-btn">Öde</button>
@@ -207,6 +207,10 @@
                         invalid: 'jp-card-invalid' // Card invalid state class
                     }
                 });
+                const totalAmountElement = document.querySelector('.cart-summary');
+                const totalAmount = totalAmountElement ? totalAmountElement.getAttribute('data-total-amount') : 0;
+                console.log(totalAmount); // Toplam tutarı console'a yazdırır
+
 
             </script>
         </div>

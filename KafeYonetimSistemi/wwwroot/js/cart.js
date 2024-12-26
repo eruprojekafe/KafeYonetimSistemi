@@ -117,33 +117,11 @@ function submitCart() {
         return;
     }
 
-    // Toplam tutarı hesapla
-    const totalAmount = cart.reduce((sum, item) => {
-        const price = parseFloat(item.Price);
-        const quantity = parseInt(item.Quantity, 10);
-
-        if (isNaN(price) || isNaN(quantity)) {
-            console.error(`Geçersiz fiyat veya miktar: Fiyat=${item.Price}, Miktar=${item.Quantity}`);
-            return sum;
-        }
-
-        return sum + price * quantity;
-    }, 0);
-
-    // Toplam tutarı HTML'ye yaz
-    const totalAmountElement = document.getElementById('totalAmount');
-    if (totalAmountElement) {
-        totalAmountElement.innerText = totalAmount.toFixed(2); // Ondalık format
-    } else {
-        console.error('Toplam tutar elemanı bulunamadı.');
-    }
-
     // Masa numarasını al
     const tableNumber = "@(Model.TableNumber)";
 
     // URL oluştur ve yönlendir
     const queryString = new URLSearchParams({
-        totalAmount: totalAmount.toFixed(2),
         cartItems: JSON.stringify(cart),
         tableNumber: tableNumber
     }).toString();
@@ -151,9 +129,36 @@ function submitCart() {
     window.location.href = `/QrCodeList/Buy?${queryString}`;
 }
 
+function addtoTotalAmount(){
+    const cartData = JSON.parse(localStorage.getItem("cart")); // Get cart data from localStorage
+
+    if (cartData) {
+        fetch('/QrCodeList/Cart?handler=CalculateTotal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value // Include anti-forgery token
+            },
+            body: JSON.stringify(cartData) // Send cart data to the server
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const formattedTotal = parseFloat(data.totalAmount).toFixed(2); // Decimal formata dönüştür
+                    document.getElementById("totalAmount").textContent = `${formattedTotal}`; // TotalAmount'u güncelle
+                } else {
+                    console.error("Error calculating total:", data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+}
+
+
 // Sayfa yüklendiğinde işlemleri başlat
 window.addEventListener('DOMContentLoaded', function () {
     loadCart();
     updateCartCount(); // Sayfa yüklendiğinde ikon güncellenmeli
     togglePaymentButton();
+    addtoTotalAmount();
 });

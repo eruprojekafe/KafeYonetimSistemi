@@ -16,26 +16,21 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
             _context = context;
             PaymentInfo = new PaymentData(); // Initialize PaymentInfo to avoid null reference issues
         }
-
+        public decimal TotalAmount { get; set; }
         [BindProperty]
         public PaymentData PaymentInfo { get; set; }
 
         public string Message { get; set; } = string.Empty; // Initialize Message to avoid null reference
 
+        [BindProperty(SupportsGet = true)]
         public int TableNumber { get; set; }
 
         [BindProperty]
         public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>(); // Ensure CartItems is always initialized
 
-        [BindProperty(SupportsGet = true)]
-        public decimal TotalAmount { get; set; } // Toplam tutar
-
-        public IActionResult OnGet(decimal totalAmount)
+        public IActionResult OnGet()
         {
-            TotalAmount = totalAmount;
 
-            // Yalnýzca arka tarafta veri almak için gerekli deðil.
-            // JavaScript ile localStorage'tan veri alýyoruz.
             return Page();
         }
 
@@ -97,7 +92,6 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
             _context.Order.Add(order);
             _context.SaveChanges();
         }
-
         public class PaymentData
         {
             public string? CardNumber { get; set; }
