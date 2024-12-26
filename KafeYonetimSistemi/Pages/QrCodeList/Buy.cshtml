@@ -1,0 +1,168 @@
+﻿@page
+@model KafeYonetimSistemi.Pages.QrCodeList.BuyModel
+@{
+    ViewData["Title"] = "Ödeme Sayfası";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Ekranı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .payment-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .card-preview {
+            background: #e0e0e0;
+            height: 150px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ccc;
+            font-size: 24px;
+        }
+
+            .card-preview span {
+                position: absolute;
+                bottom: 20px;
+                left: 20px;
+                font-size: 18px;
+            }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .total-amount {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="@(Model.Message.Contains("başarı") ? "success-message" : "error-message")">
+                @Model.Message
+            </div>
+        }
+
+        <div class="card-preview">
+            Kredi Kartı Görünümü
+            <span>1234 5678 9012 3456</span>
+        </div>
+
+        <div id="totalAmountDisplay">
+            <strong>Toplam Tutar: </strong> <span id="totalAmount">@Model.TotalAmount</span>₺
+        </div>
+
+        <form method="post">
+            <label for="card-number">Kredi Kartı Numarası</label>
+            <input type="text" id="card-number" name="PaymentInfo.CardNumber" placeholder="1234 5678 9012 3456" required>
+
+            <label for="card-name">İsim</label>
+            <input type="text" id="card-name" name="PaymentInfo.CardName" placeholder="Tam Ad" required>
+
+            <label for="expiration">Son Kullanma Tarihi</label>
+            <input type="text" id="expiration" name="PaymentInfo.Expiration" placeholder="MM/YY" required>
+
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" name="PaymentInfo.CVV" placeholder="123" required>
+
+            <div class="button-group">
+                <button type="submit" class="submit-btn">Öde</button>
+                <button type="reset" class="clear-btn">Temizle</button>
+            </div>
+        </form>
+
+        <script>
+            const totalAmountFromModel = parseFloat("@Model.TotalAmount");
+
+            const totalAmountElement = document.getElementById('totalAmount');
+            if (totalAmountElement) {
+                totalAmountElement.innerText = totalAmountFromModel.toFixed(2); // İki ondalıklı formatta göster
+            }
+
+            // Başarılı ödeme sonrası yönlendirme
+            const message = "@Model.Message";
+            if (message.includes("başarı")) {
+                setTimeout(() => {
+                    window.location.href = "/OrderSuccess"; // Yönlendirme sayfası
+                }, 2000); // 2 saniye sonra yönlendirme
+            }
+                        // Sayfa yüklendiğinde submitCart fonksiyonunu bir kez çağır
+            window.addEventListener('DOMContentLoaded', function () {
+                submitCart();  // Bu, sayfa yüklendiğinde bir kez çalışacak
+            });
+
+        </script>
+    </div>
+    <script src="~/js/cart.js" asp-append-version="true"></script>
+</body>
+</html>

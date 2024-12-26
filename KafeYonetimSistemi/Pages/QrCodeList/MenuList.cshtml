@@ -30,10 +30,10 @@
             cursor: pointer;
         }
 
-        .description.expanded {
+            .description.expanded {
                 white-space: normal;
                 overflow: visible;
-        }
+            }
 
         .cart-button {
             position: fixed;
@@ -50,9 +50,10 @@
             transition: background-color 0.3s ease-in-out;
         }
 
-        .cart-button:hover {
+            .cart-button:hover {
                 background-color: #218838;
-        }
+            }
+
         .category-return-button {
             position: fixed;
             bottom: 80px;
@@ -67,10 +68,10 @@
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .category-return-button:hover {
-            background-color: #5f9ea0;
-            transform: translateX(300%) scale(1.1);
-        }
+            .category-return-button:hover {
+                background-color: #5f9ea0;
+                transform: translateX(300%) scale(1.1);
+            }
     </style>
 </head>
 <body>
@@ -98,7 +99,11 @@
                                     </div>
                                     @if (item.IsAvailable)
                                     {
-                                        <button class="btn btn-primary ms-2" onclick="handleAddToCart(@item.Id, '@item.Name', @item.Price)">Sepete Ekle</button>
+                                        <button class="btn btn-primary ms-2"
+                                                onclick="handleAddToCart(@item.Id, '@item.Name', @item.Price.ToString(System.Globalization.CultureInfo.InvariantCulture))">
+                                            Sepete Ekle
+                                        </button>
+
                                     }
                                     else
                                     {
@@ -117,11 +122,11 @@
         }
 
         <!-- Kategorilere Git Butonu -->
-        <a href="/QrCodeList/@Model.TableNumber" class="btn btn-link btn-lg category-return-button" > Menüye Dön</a>
+        <a href="/QrCodeList/@Model.TableNumber" class="btn btn-link btn-lg category-return-button"> Menüye Dön</a>
 
     </div>
 
     <script src="/js/cart.js"></script>
-    <script src="/js/menulist.js"></script> 
+    <script src="/js/menulist.js"></script>
 </body>
 </html>
