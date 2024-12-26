@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using KafeYonetimSistemi.Data;
 using KafeYonetimSistemi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace KafeYonetimSistemi.Pages.Inventory
 {
@@ -21,28 +22,24 @@ namespace KafeYonetimSistemi.Pages.Inventory
 
         [BindProperty]
         public MenuItemTransaction MenuItemTransaction { get; set; } = default!;
-        public MenuItem MenuItem { get; set; } = default!;
+        public MenuItem? MenuItem { get; set; }
 
 
 
         public IActionResult OnGet(int id)
         {
-            // MenuItem nesnesini id ile alıyoruz.
+          
             MenuItem = _context.MenuItem.FirstOrDefault(m => m.Id == id);
 
             if (MenuItem == null)
             {
-                return NotFound(); // Eğer ürün bulunamazsa hata döndür
+                return NotFound(); 
             }
-
-            // MenuItemTransaction için varsayılan yapı oluştur
+            
             MenuItemTransaction = new MenuItemTransaction
             {
-                MenuItemId = id, // Alınan MenuItem'ın Id'si ile eşleştir
-                Amount = 0, // Varsayılan stok miktarı
-                TransactionType = TransactionType.ADD // Varsayılan işlem tür
+                MenuItemId = id // ID değerini burada ayarlıyoruz
             };
-
             return Page();
         }
 
@@ -57,38 +54,46 @@ namespace KafeYonetimSistemi.Pages.Inventory
             }
 
 
-            // İşlem tarihini güncelle
-            MenuItemTransaction.Timestamp = DateTime.Now;
+            // Önce mevcut stok miktarını al
+            var lastTransaction = await _context.MenuItemTransaction
+                .Where(m => m.MenuItemId == MenuItemTransaction.MenuItemId)
+                .OrderByDescending(m => m.Timestamp)
+                .FirstOrDefaultAsync();
 
-            // İşlem türüne göre stok miktarını güncelle
-            var menuItem = await _context.MenuItem.FindAsync(MenuItemTransaction.MenuItemId);
-            if (menuItem == null)
-            {
-                return NotFound();
-            }
 
+
+            var currentStock = lastTransaction?.Amount ?? 0; // Mevcut stok miktarı
+
+
+      
+            // Transaction işlemi
             if (MenuItemTransaction.TransactionType == TransactionType.ADD)
             {
-                menuItem.Price += MenuItemTransaction.Amount; // Stok miktarını artır
+                // Stok artırılır
+                MenuItemTransaction.Amount = currentStock + MenuItemTransaction.Amount;
+
             }
             else if (MenuItemTransaction.TransactionType == TransactionType.REMOVE)
             {
-                menuItem.Price -= MenuItemTransaction.Amount; // Stok miktarını azalt
-                if (menuItem.Price < 0) // Negatif stok miktarı kontrolü
+                // Stok azaltılır
+                if (currentStock >= MenuItemTransaction.Amount)
                 {
-                    menuItem.Price = 0;
+                    MenuItemTransaction.Amount = currentStock - MenuItemTransaction.Amount;
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Yetersiz stok.");
+                    return Page();
                 }
             }
 
-            // Stok değişikliğini kaydet
-            _context.MenuItem.Update(menuItem);
+           
 
-
+            MenuItemTransaction.Timestamp = DateTime.Now;
             // İşlemi veritabanına ekle
             _context.MenuItemTransaction.Add(MenuItemTransaction);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Ürün başarıyla güncellendi!";
 
             return RedirectToPage("./Index");
         }

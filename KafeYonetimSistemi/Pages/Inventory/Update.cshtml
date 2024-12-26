@@ -1,6 +1,7 @@
 ﻿@page
 @model KafeYonetimSistemi.Pages.Inventory.UpdateModel
 @using KafeYonetimSistemi.Models
+
 @{
 
 	ViewData["Title"] = "Güncelle";
@@ -16,40 +17,39 @@
 </head>
 <body>
 	<h1 class="text-center">Envanter Yönetim Sistemi</h1>
-	<h3>Güncelle: @Model.MenuItem.Name</h3>
+	<h3>Güncelle: @Model.MenuItem?.Name</h3>
 
 	<hr />
 	<style>
 		.form-group {
-			margin-bottom: 20px; /* Her form grubunun altına boşluk ekler */
+			margin-bottom: 20px; 
 		}
 
 		label {
-			font-weight: bold; /* Etiketlerin kalınlığını artırır */
+			font-weight: bold; 
 		}
 
 		input[type="radio"] {
-			margin-right: 8px; /* Radyo butonları ile etiket arasında boşluk oluşturur */
+			margin-right: 8px; 
 		}
 
 		.btn {
-			margin-top: 15px; /* Butonun üstüne boşluk ekler */
+			margin-top: 15px; 
 		}
-	</style>
-
+	</style
+>
 
 
 	<div class="row">
 		<div class="col-md-6">
 			<form method="post">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="MenuItemTransaction.MenuItemId" />
 				<div class="form-group">
 					<label>İşlem Türü:</label><br />
-					<input type="radio" id="add" name="MenuItemTransaction.TransactionType" value="ADD"
-					@(Model.MenuItemTransaction.TransactionType == TransactionType.ADD) ? "checked" : "" ) />
+					<input type="radio" asp-for="MenuItemTransaction.TransactionType" value="ADD" id="add" />
 					<label for="add">Ekle</label>
-					<input type="radio" id="remove" name="MenuItemTransaction.TransactionType" value="REMOVE"
-					@(Model.MenuItemTransaction.TransactionType == TransactionType.REMOVE) ? "checked" : "" ) />
+					<input type="radio" asp-for="MenuItemTransaction.TransactionType" value="REMOVE" id="remove" />
 					<label for="remove">Çıkar</label>
 				</div>
 				<div class="form-group">
@@ -61,7 +61,6 @@
 				<div class="form-group">
 					<input type="submit" value="Güncelle" class="btn btn-primary" />
 				</div>
-
 
 
 			</form>
