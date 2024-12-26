@@ -24,9 +24,21 @@ namespace KafeYonetimSistemi.Pages.Inventory
 
         public async Task OnGetAsync()
         {
+            // Menü öğelerini ve ilişkili işlemleri yükle
             MenuItem = await _context.MenuItem
                 .Include(m => m.MenuItemTransaction)
                 .ToListAsync();
         }
+
+
+        public decimal CurrentAmount { get; set; }
+        public int GetCurrentAmount(int id)
+        {
+            // İlgili işlemlerden stok miktarını hesapla
+            return (int)_context.MenuItemTransaction
+                .Where(t => t.MenuItemId == id)
+                .Sum(t => t.TransactionType == TransactionType.ADD ? t.Amount : -t.Amount);
+        }
     }
+
 }
