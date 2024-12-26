@@ -36,7 +36,7 @@ function addToCart(itemId, name, price, quantity) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert(${ quantity } adet ${ name } sepete eklendi!);
+    alert('${ quantity } adet ${ name } sepete eklendi!');
     updateCartCount(); // Sepet simgesindeki sayıyı güncelle
 }
 
@@ -111,8 +111,8 @@ function togglePaymentButton() {
 
 // Ödeme işlemini başlatma
 function submitCart() {
-    const cart = getCart(); // Sepetteki ürünleri al
-    if (cart.length === 0) {
+    const cart = getCart(); // Sepeti al
+    if (!cart || cart.length === 0) {
         alert('Sepetiniz boş!');
         return;
     }
@@ -120,38 +120,36 @@ function submitCart() {
     // Toplam tutarı hesapla
     const totalAmount = cart.reduce((sum, item) => {
         const price = parseFloat(item.Price);
-        if (isNaN(price)) {
-            console.error(Geçersiz fiyat: ${ item.Price });
+        const quantity = parseInt(item.Quantity, 10);
+
+        if (isNaN(price) || isNaN(quantity)) {
+            console.error(`Geçersiz fiyat veya miktar: Fiyat=${item.Price}, Miktar=${item.Quantity}`);
             return sum;
         }
-        return sum + price * item.Quantity;
+
+        return sum + price * quantity;
     }, 0);
 
-    // HTML'den toplam tutarı almak
+    // Toplam tutarı HTML'ye yaz
     const totalAmountElement = document.getElementById('totalAmount');
     if (totalAmountElement) {
-        totalAmountElement.innerText = totalAmount.toFixed(2); // Toplam tutarı HTML'ye yaz
+        totalAmountElement.innerText = totalAmount.toFixed(2); // Ondalık format
+    } else {
+        console.error('Toplam tutar elemanı bulunamadı.');
     }
 
-    const tableNumber = "@Model.TableNumber"; // Masa numarasını al
+    // Masa numarasını al
+    const tableNumber = "@(Model.TableNumber)";
 
-    // URL'yi oluştur
+    // URL oluştur ve yönlendir
     const queryString = new URLSearchParams({
-        totalAmount: totalAmount.toFixed(2), // Ondalık formatta
+        totalAmount: totalAmount.toFixed(2),
         cartItems: JSON.stringify(cart),
         tableNumber: tableNumber
     }).toString();
 
-    // Buy sayfasına yönlendirme
-    if (!sessionStorage.getItem('paymentRedirected')) {
-        sessionStorage.setItem('paymentRedirected', 'true'); // Yönlendirme durumu kaydedildi
-        // Yönlendirme işlemini gerçekleştirin
-        window.location.href = /QrCodeList/Buy ? ${ queryString };
-    } else {
-        console.log("Yönlendirme zaten yapıldı, tekrar yapılmaz.");
-    }
+    window.location.href = `/QrCodeList/Buy?${queryString}`;
 }
-
 
 // Sayfa yüklendiğinde işlemleri başlat
 window.addEventListener('DOMContentLoaded', function () {

@@ -1,99 +1,46 @@
-﻿using KafeYonetimSistemi.Data;
-using KafeYonetimSistemi.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Linq;
-
-namespace KafeYonetimSistemi.Pages.QrCodeList
-{
-    public class CartModel : PageModel
-    {
-        private readonly ApplicationDbContext _context;
-
-        public CartModel(ApplicationDbContext context)
-        {
-            _context = context;
+﻿@page
+@model KafeYonetimSistemi.Pages.QrCodeList.CartModel
+@{
+    ViewData["Title"] = "Sepet";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepetim</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .category-return-button {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: cadetblue;
+            color: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        public int TableNumber { get; set; }
-
-        // Kullanıcıya gönderilecek ürünlerin listesi
-        public List<CartItemDto>
-    CartItems { get; set; } = new List<CartItemDto>
-        ();
-
-        // Sepet sayfasını yüklendiğinde çağrılacak
-        public IActionResult OnGet()
-        {
-        if (Request.Query.ContainsKey("tableNumber"))
-        {
-        TableNumber = Convert.ToInt32(Request.Query["tableNumber"]);
-        }
-        return Page();
-        }
-
-        // Sepet verilerini sunucuya POST işlemiyle al ve işleme koy
-        public IActionResult OnPost([FromBody] CartData cartData)
-        {
-        if (cartData == null || !cartData.CartItems.Any())
-        {
-        return BadRequest(new { message = "Sepet boş!" });
-        }
-
-        // Gönderilen MenuItemId'lere göre veritabanından ürün bilgilerini al
-        var items = _context.MenuItem
-        .Where(item => cartData.CartItems.Select(ci => ci.MenuItemId).Contains(item.Id))
-        .ToList();
-
-        if (items.Count == 0)
-        {
-        return BadRequest(new { message = "Ürünler bulunamadı!" });
-        }
-
-        // Sepetteki ürünlerin detaylarını güncelle
-        CartItems = cartData.CartItems.Select(cartItem =>
-        {
-        var dbItem = items.FirstOrDefault(i => i.Id == cartItem.MenuItemId);
-        return new CartItemDto
-        {
-        MenuItemId = cartItem.MenuItemId,
-        Name = dbItem?.Name ?? "Bilinmeyen Ürün",
-        Price = dbItem?.Price ?? 0,
-        Quantity = cartItem.Quantity
-        };
-        }).ToList();
-
-        // Sipariş oluştur
-        var order = new Order
-        {
-        OrderTime = DateTime.Now,
-        Status = OrderStatus.Created,
-        Table = _context.Table.FirstOrDefault(t => t.TableNumber == cartData.TableNumber),
-        MenuItems = items
-        };
-
-        _context.Order.Add(order);
-        _context.SaveChanges();
-
-        // İşlem başarılı
-        return new JsonResult(new { message = "Sepet başarıyla işlendi.", CartItems });
-        }
-        }
-
-        // Sepet öğesi için DTO sınıfı
-        public class CartItemDto
-        {
-        public int MenuItemId { get; set; }
-        public string? Name { get; set; }
-        public decimal Price { get; set; }
-        public int Quantity { get; set; }
-        }
-
-        // Yeni gelen veri sınıfı
-        public class CartData
-        {
-        public List<CartItemDto>
-            CartItems { get; set; }
-            public int TableNumber { get; set; }
+            .category-return-button:hover {
+                background-color: #5f9ea0;
+                transform: translateX(-50%) scale(1.1);
             }
-            }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Sepetim</h1>
+        <!-- Sepet içeriği buraya yüklenecek -->
+        <div id="cartContents" class="mt-3"></div>
+        <!-- Sepet içeriği burada tekrar tanımlanmadı -->
+        <button id="paymentButton" class="btn btn-success mt-3" style="display: none;" onclick="submitCart()">Ödeme Yap</button>
+    </div>
+    <a href="/QrCodeList/@Model.TableNumber" class="btn btn-link btn-lg category-return-button">Menüye Dön</a>
+
+    <script src="~/js/cart.js" asp-append-version="true"></script>
+</body>
+</html>

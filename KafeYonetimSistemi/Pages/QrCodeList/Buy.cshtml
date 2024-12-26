@@ -14,11 +14,14 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center; /* Yatayda ortala */
+            align-items: center; /* Dikeyde ortala */
+            height: 100vh; /* Tüm ekran yüksekliği */
         }
 
         .payment-container {
@@ -105,6 +108,7 @@
     </style>
 </head>
 <body>
+    <div class="main-container">
     <div class="payment-container">
         @if (!string.IsNullOrEmpty(Model.Message))
         {
@@ -142,13 +146,6 @@
         </form>
 
         <script>
-            const totalAmountFromModel = parseFloat("@Model.TotalAmount");
-
-            const totalAmountElement = document.getElementById('totalAmount');
-            if (totalAmountElement) {
-                totalAmountElement.innerText = totalAmountFromModel.toFixed(2); // İki ondalıklı formatta göster
-            }
-
             // Başarılı ödeme sonrası yönlendirme
             const message = "@Model.Message";
             if (message.includes("başarı")) {
@@ -156,12 +153,8 @@
                     window.location.href = "/OrderSuccess"; // Yönlendirme sayfası
                 }, 2000); // 2 saniye sonra yönlendirme
             }
-                        // Sayfa yüklendiğinde submitCart fonksiyonunu bir kez çağır
-            window.addEventListener('DOMContentLoaded', function () {
-                submitCart();  // Bu, sayfa yüklendiğinde bir kez çalışacak
-            });
-
         </script>
+    </div>
     </div>
     <script src="~/js/cart.js" asp-append-version="true"></script>
 </body>
