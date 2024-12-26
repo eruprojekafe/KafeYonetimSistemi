@@ -24,28 +24,23 @@ namespace KafeYonetimSistemi.Pages.Inventory
         public MenuItemTransaction MenuItemTransaction { get; set; } = default!;
         public MenuItem? MenuItem { get; set; }
 
-
-
         public IActionResult OnGet(int id)
         {
-          
             MenuItem = _context.MenuItem.FirstOrDefault(m => m.Id == id);
 
             if (MenuItem == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
-            
+
             MenuItemTransaction = new MenuItemTransaction
             {
                 MenuItemId = id // ID değerini burada ayarlıyoruz
             };
+
             return Page();
         }
 
-
-
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -53,25 +48,19 @@ namespace KafeYonetimSistemi.Pages.Inventory
                 return Page();
             }
 
-
             // Önce mevcut stok miktarını al
             var lastTransaction = await _context.MenuItemTransaction
                 .Where(m => m.MenuItemId == MenuItemTransaction.MenuItemId)
                 .OrderByDescending(m => m.Timestamp)
                 .FirstOrDefaultAsync();
 
-
-
             var currentStock = lastTransaction?.Amount ?? 0; // Mevcut stok miktarı
 
-
-      
             // Transaction işlemi
             if (MenuItemTransaction.TransactionType == TransactionType.ADD)
             {
                 // Stok artırılır
                 MenuItemTransaction.Amount = currentStock + MenuItemTransaction.Amount;
-
             }
             else if (MenuItemTransaction.TransactionType == TransactionType.REMOVE)
             {
@@ -87,13 +76,11 @@ namespace KafeYonetimSistemi.Pages.Inventory
                 }
             }
 
-           
-
             MenuItemTransaction.Timestamp = DateTime.Now;
+
             // İşlemi veritabanına ekle
             _context.MenuItemTransaction.Add(MenuItemTransaction);
             await _context.SaveChangesAsync();
-
 
             return RedirectToPage("./Index");
         }
