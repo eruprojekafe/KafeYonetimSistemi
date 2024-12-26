@@ -39,7 +39,7 @@ namespace KafeYonetimSistemi.Pages.Admin.MenuItems
 
             return Page();
         }
- 
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
