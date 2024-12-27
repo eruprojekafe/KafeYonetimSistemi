@@ -1,0 +1,156 @@
+﻿@page
+@model StockChangesModel
+
+<h2>Stok Değişim Raporu (Günlük, Haftalık ve Aylık)</h2>
+
+<!-- Günlük Grafik Alanı -->
+<h3>Günlük Stok Değişimi</h3>
+<canvas id="dailyStockChangesChart" width="400" height="200"></canvas>
+
+<!-- Günlük Tablo -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Toplam Miktar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model.DailyStockReports)
+        {
+            <tr>
+                <td>@report.MenuItemName</td>
+                <td>@report.TotalQuantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Haftalık Grafik Alanı -->
+<h3>Haftalık Stok Değişimi</h3>
+<canvas id="weeklyStockChangesChart" width="400" height="200"></canvas>
+
+<!-- Haftalık Tablo -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Toplam Miktar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model.WeeklyStockReports)
+        {
+            <tr>
+                <td>@report.MenuItemName</td>
+                <td>@report.TotalQuantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Aylık Grafik Alanı -->
+<h3>Aylık Stok Değişimi</h3>
+<canvas id="monthlyStockChangesChart" width="400" height="200"></canvas>
+
+<!-- Aylık Tablo -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Toplam Miktar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model.MonthlyStockReports)
+        {
+            <tr>
+                <td>@report.MenuItemName</td>
+                <td>@report.TotalQuantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Günlük Grafik için veriler
+        var dailyLabels = @Html.Raw(Json.Serialize(Model.DailyStockReports.Select(r => r.MenuItemName)));
+        var dailyData = @Html.Raw(Json.Serialize(Model.DailyStockReports.Select(r => r.TotalQuantity)));
+
+        var dailyCtx = document.getElementById('dailyStockChangesChart').getContext('2d');
+        var dailyStockChangesChart = new Chart(dailyCtx, {
+            type: 'bar',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: 'Günlük Stok Değişimi',
+                    data: dailyData,
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Haftalık Grafik için veriler
+        var weeklyLabels = @Html.Raw(Json.Serialize(Model.WeeklyStockReports.Select(r => r.MenuItemName)));
+        var weeklyData = @Html.Raw(Json.Serialize(Model.WeeklyStockReports.Select(r => r.TotalQuantity)));
+
+        var weeklyCtx = document.getElementById('weeklyStockChangesChart').getContext('2d');
+        var weeklyStockChangesChart = new Chart(weeklyCtx, {
+            type: 'bar',
+            data: {
+                labels: weeklyLabels,
+                datasets: [{
+                    label: 'Haftalık Stok Değişimi',
+                    data: weeklyData,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Aylık Grafik için veriler
+        var monthlyLabels = @Html.Raw(Json.Serialize(Model.MonthlyStockReports.Select(r => r.MenuItemName)));
+        var monthlyData = @Html.Raw(Json.Serialize(Model.MonthlyStockReports.Select(r => r.TotalQuantity)));
+
+        var monthlyCtx = document.getElementById('monthlyStockChangesChart').getContext('2d');
+        var monthlyStockChangesChart = new Chart(monthlyCtx, {
+            type: 'bar',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'Aylık Stok Değişimi',
+                    data: monthlyData,
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}
