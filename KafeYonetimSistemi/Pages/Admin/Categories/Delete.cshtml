@@ -5,26 +5,27 @@
     ViewData["Title"] = "Kategori Sil";
 }
 
-<h1>Kategori Sil</h1>
+<h1 class="mb-4">Kategori Sil</h1>
 
-<h3>Bu kategoriyi silmek istediğinizden emin misiniz?</h3>
+<div class="alert alert-warning text-center" role="alert" style="font-size: 1.2rem; margin-bottom: 20px;">
+    <strong>Bu kaydı silmek istediğinize emin misiniz?</strong>
+</div>
 
-<div>
-    <h4>Kategori Bilgisi</h4>
+<div class="bordered-form">
+    <h4 class="fw-bold text-dark mb-3">KATEGORİ</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class="col-sm-3">
             @Html.DisplayNameFor(model => model.Category.Name)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-9">
             @Html.DisplayFor(model => model.Category.Name)
         </dd>
     </dl>
 
-    <form method="post">
+    <form method="post" class="d-flex gap-3 mt-4">
         <input type="hidden" asp-for="Category.Id" />
-        <input type="submit" value="Kategoriyi Sil" class="btn btn-danger" /> |
-        <a asp-page="./Index">Listeye Geri Dön</a>
+        <input type="submit" value="Sil" class="btn btn-danger" />
+        <a asp-page="./Index" class="btn btn-secondary">Listeye Geri Dön</a>
     </form>
 </div>
-

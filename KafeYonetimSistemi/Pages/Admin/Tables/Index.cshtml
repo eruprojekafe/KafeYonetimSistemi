@@ -2,10 +2,10 @@
 @model KafeYonetimSistemi.Pages.Admin.Tables.IndexModel
 
 @{
-    ViewData["Title"] = "MASA DURUMLARI";
+    ViewData["Title"] = "Masa Durumları";
 }
 
-<h1 class="mb-4">MASA DURUMLARI</h1>
+<h1 class="mb-4">Masa Durumları</h1>
 
 <p>
     <a asp-page="Create" class="btn btn-success">Yeni Durum Oluştur</a>
@@ -40,8 +40,9 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-.table th, .table td {
-    padding: 15px;
-    vertical-align: middle;
-}
+<style>
+    .table th, .table td {
+        padding: 15px;
+        vertical-align: middle;
+    }
+</style>
