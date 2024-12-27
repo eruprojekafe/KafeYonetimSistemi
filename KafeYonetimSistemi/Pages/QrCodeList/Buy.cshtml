@@ -1,4 +1,4 @@
-﻿@page
+﻿@page 
 @model KafeYonetimSistemi.Pages.QrCodeList.BuyModel
 @{
     ViewData["Title"] = "Ödeme Sayfası";
@@ -129,8 +129,13 @@
                     @Model.Message
                 </div>
             }
-            <div class="card-preview jp-card-container">
 
+            <!-- Table number'ı buradan görüntüleyebilirsiniz -->
+            <div class="table-number">
+                <p><strong>Table Number:</strong> @Model.TableNumber</p>
+            </div>
+
+            <div class="card-preview jp-card-container">
             </div>
             <form method="post">
                 <div class="form-group">
@@ -139,8 +144,8 @@
                     <input type="text" id="card-number" name="PaymentInfo.CardNumber" class="form-control" placeholder="1234 5678 9012 3456" required>
                 </div>
                 <div class="form-group">
-                    <label for="card-name">İsim</label>
-                    <input type="text" id="card-name" name="PaymentInfo.CardName" class="form-control" placeholder="Tam Ad" required>
+                    <label for="card-name">Adınız Soyadınız</label>
+                    <input type="text" id="card-name" name="PaymentInfo.CardName" class="form-control" placeholder="Adınız Soyadınız" required>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -157,7 +162,7 @@
                     </div>
                 </div>
                 <div class="cart-summary" data-total-amount="@Model.TotalAmount">
-                    <p><strong>Toplam Tutar:</strong> <span id="totalAmount">@Model.TotalAmount</span> ₺</p>
+                    <p><strong>Toplam Tutar:</strong> <span id="totalAmount">@Model.TotalAmount.ToString("C2")</span> ₺</p>
                 </div>
                 <div class="button-group">
                     <button type="submit" class="submit-btn">Öde</button>
@@ -208,9 +213,8 @@
                     }
                 });
                 const totalAmountElement = document.querySelector('.cart-summary');
-                const totalAmount = totalAmountElement ? totalAmountElement.getAttribute('data-total-amount') : 0;
+                let totalAmount = totalAmountElement ? parseFloat(totalAmountElement.getAttribute('data-total-amount')) : 0;
                 console.log(totalAmount); // Toplam tutarı console'a yazdırır
-
 
             </script>
         </div>

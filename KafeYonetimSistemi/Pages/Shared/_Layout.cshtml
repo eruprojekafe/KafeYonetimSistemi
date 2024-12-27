@@ -38,13 +38,14 @@
                 {
                     <div class="d-flex justify-content-center align-items-center w-100">
                         <span class="fw-bold" style="font-style: italic; flex-grow: 1; text-align: center;">Freesia Kafeye Hoşgeldiniz</span>
-                        <a href="javascript:void(0);" class="btn btn-outline-dark position-relative" onclick="location.href='/QrCodeList/Cart';">
+                        <a class="btn btn-outline-dark position-relative" id="goToCartButton" data-table-number="@Model.TableNumber" onclick="goToCart();">
                             <i class="bi bi-cart" style="font-size: 2rem;"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">
                                 0
                             </span>
                         </a>
                     </div>
+
                 }
             </div>
         </nav>
@@ -64,7 +65,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script src="~/js/menulist.js" asp-append-version="true"></script>
     <!-- Sepet Sayaç İşlevi -->
     <script src="~/js/cart.js" asp-append-version="true"></script>
     <script>

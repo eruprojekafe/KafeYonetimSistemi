@@ -12,6 +12,7 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
     public class QrCodeListModel : PageModel
     {
         private readonly KafeYonetimSistemi.Data.ApplicationDbContext _context;
+        [BindProperty(SupportsGet = true)]
         public int TableNumber { get; set; }
         public QrCodeListModel(KafeYonetimSistemi.Data.ApplicationDbContext context)
         {

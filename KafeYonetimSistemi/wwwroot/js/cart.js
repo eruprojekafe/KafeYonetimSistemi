@@ -36,7 +36,7 @@ function addToCart(itemId, name, price, quantity) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert('${ quantity } adet ${ name } sepete eklendi!');
+    alert(`${quantity} adet ${name} sepete eklendi!`);
     updateCartCount(); // Sepet simgesindeki sayıyı güncelle
 }
 
@@ -109,6 +109,7 @@ function togglePaymentButton() {
     }
 }
 
+const tableNumber = "@(Model.TableNumber)";
 // Ödeme işlemini başlatma
 function submitCart() {
     const cart = getCart(); // Sepeti al
@@ -116,9 +117,6 @@ function submitCart() {
         alert('Sepetiniz boş!');
         return;
     }
-
-    // Masa numarasını al
-    const tableNumber = "@(Model.TableNumber)";
 
     // URL oluştur ve yönlendir
     const queryString = new URLSearchParams({

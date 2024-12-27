@@ -15,7 +15,6 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         {
             _context = context;
         }
-
         [BindProperty(SupportsGet = true)]
         public int TableNumber { get; set; }
         public decimal TotalAmount { get; set; }
@@ -24,12 +23,9 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
 
         // Sepet sayfasýný yüklendiðinde çaðrýlacak
-        public IActionResult OnGet()
+        public IActionResult OnGetAsync(int tableNumber)
         {
-            if (Request.Query.ContainsKey("tableNumber"))
-            {
-                TableNumber = Convert.ToInt32(Request.Query["tableNumber"]);
-            }
+            TableNumber = tableNumber;
             return Page();
         }
 
