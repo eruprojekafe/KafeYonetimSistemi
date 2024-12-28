@@ -4,6 +4,7 @@ using KafeYonetimSistemi.Pages.QrCodeList;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace KafeYonetimSistemi.Pages.QrCodeList
 {
@@ -137,25 +138,35 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
 
         private void SaveOrderToDatabase(List<CartItemDto> cartItems)
         {
-            var table = _context.Table.FirstOrDefault(t => t.TableNumber == TableNumber);
-            if (table == null)
+            // TableNumber deðerini kontrol et
+            if (TableNumber <= 0)
             {
-                throw new Exception($"Tablo numarasý {TableNumber} bulunamadý!");
+                throw new Exception($"Geçersiz masa numarasý: {TableNumber}");
             }
 
-            // Gerekli MenuItem'leri tek seferde veritabanýndan çek
+            // Tabloyu veritabanýndan alýyoruz
+            var table = _context.Table.FirstOrDefault(t => t.TableNumber == TableNumber);
+
+            if (table == null)
+            {
+                // Masa bulunamadýðýnda anlamlý bir hata mesajý veriyoruz
+                throw new Exception($"Tablo numarasý {TableNumber} veritabanýnda bulunamadý!");
+            }
+
+            // MenuItem'leri veritabanýndan tek seferde çek
             var menuItemIds = cartItems.Select(c => c.MenuItemId).ToList();
             var menuItems = _context.MenuItem.Where(m => menuItemIds.Contains(m.Id)).ToDictionary(m => m.Id);
 
-            // Yeni sipariþ oluþtur
+            // Yeni sipariþ oluþturuyoruz
             var order = new Order
             {
                 OrderTime = DateTime.Now,
                 Status = OrderStatus.Created,
-                Table = table, // Tablo numarasýný sipariþle iliþkilendiriyoruz
+                Table = table, // Tabloyu sipariþle iliþkilendiriyoruz
                 MenuItems = new List<MenuItem>()
             };
 
+            // Sepetteki her öðeyi sipariþe ekliyoruz
             foreach (var cartItem in cartItems)
             {
                 if (!menuItems.TryGetValue(cartItem.MenuItemId, out var menuItem))
@@ -166,8 +177,24 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
                 order.MenuItems.Add(menuItem);
             }
 
+            // Sipariþi veritabanýna ekliyoruz
             _context.Order.Add(order);
             _context.SaveChanges();
+
+            // Sipariþ kaydedildikten sonra kaydedilen sipariþi alýp, TabloNumarasý'ný elde ediyoruz
+            var savedOrder = _context.Order.Include(o => o.Table)
+                                           .FirstOrDefault(o => o.Id == order.Id);
+
+            if (savedOrder != null)
+            {
+                // Sipariþin oluþturulduðu masa numarasýný alýyoruz
+                int tableNumber = savedOrder.Table.TableNumber;
+                Console.WriteLine($"Sipariþin oluþturulduðu masa numarasý: {tableNumber}");
+            }
+            else
+            {
+                throw new Exception("Sipariþ veritabanýna kaydedilemedi.");
+            }
         }
 
         public class PaymentData

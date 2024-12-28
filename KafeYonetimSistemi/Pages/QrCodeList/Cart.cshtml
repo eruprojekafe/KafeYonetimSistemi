@@ -40,8 +40,20 @@
         <!-- Sepet içeriği burada tekrar tanımlanmadı -->
         <button id="paymentButton" class="btn btn-success mt-3" style="display: none;" onclick="submitCart(); addtoTotalAmount();">Ödeme Yap</button>
     </div>
-    <a href="/QrCodeList/@Model.TableNumber" class="btn btn-link btn-lg category-return-button">Menüye Dön</a>
+    <a href="#" class="btn btn-link btn-lg category-return-button" id="returnToMenuButton">Menüye Dön</a>
+    <script>
+        document.getElementById('returnToMenuButton').addEventListener('click', function (event) {
+            event.preventDefault();
+            const tableNumber = getTableNumber(); // Masa numarasını al
 
+            if (tableNumber) {
+                // URL'yi dinamik olarak oluştur
+                window.location.href = `/QrCodeList/${tableNumber}`;
+            } else {
+                console.error('Masa numarası bulunamadı!');
+            }
+        });
+    </script>
     <script src="~/js/cart.js" asp-append-version="true"></script>
 </body>
 </html>

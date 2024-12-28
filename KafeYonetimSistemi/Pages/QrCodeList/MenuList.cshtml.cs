@@ -22,7 +22,7 @@ namespace KafeYonetimSistemi.Pages.MenuList
         public string CategoryName { get; set; } = string.Empty;
         public IList<MenuItem> MenuItems { get; set; } = new List<MenuItem>();
 
-        public async Task<IActionResult> OnGetAsync(int categoryId,int tableNumber)
+        public async Task<IActionResult> OnGetAsync(int categoryId, int tableNumber)
         {
             TableNumber = tableNumber;
 

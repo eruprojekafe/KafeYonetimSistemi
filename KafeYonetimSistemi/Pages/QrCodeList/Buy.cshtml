@@ -129,12 +129,6 @@
                     @Model.Message
                 </div>
             }
-
-            <!-- Table number'ı buradan görüntüleyebilirsiniz -->
-            <div class="table-number">
-                <p><strong>Table Number:</strong> @Model.TableNumber</p>
-            </div>
-
             <div class="card-preview jp-card-container">
             </div>
             <form method="post">
@@ -165,7 +159,7 @@
                     <p><strong>Toplam Tutar:</strong> <span id="totalAmount">@Model.TotalAmount.ToString("C2")</span> ₺</p>
                 </div>
                 <div class="button-group">
-                    <button type="submit" class="submit-btn">Öde</button>
+                    <button onclick="redirectToMenu()" class="submit-btn">Öde</button>
                     <button type="reset" class="clear-btn">Temizle</button>
                 </div>
             </form>
@@ -215,7 +209,6 @@
                 const totalAmountElement = document.querySelector('.cart-summary');
                 let totalAmount = totalAmountElement ? parseFloat(totalAmountElement.getAttribute('data-total-amount')) : 0;
                 console.log(totalAmount); // Toplam tutarı console'a yazdırır
-
             </script>
         </div>
     </div>

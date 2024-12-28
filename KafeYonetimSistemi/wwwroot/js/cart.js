@@ -7,7 +7,14 @@ function getCart() {
 function setCart(cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
+function setTableNumber(tableNumber) {
+    localStorage.setItem('tableNumber', tableNumber);
+}
 
+// Masa numarasını localStorage'tan al
+function getTableNumber() {
+    return localStorage.getItem('tableNumber');
+}
 // Sepet sayacını güncelleme
 function updateCartCount() {
     const cart = getCart();
@@ -108,8 +115,9 @@ function togglePaymentButton() {
         paymentButton.style.display = 'inline-block'; // Sepette ürün varsa göster
     }
 }
+const tableNumber = getTableNumber();
+const tableNumberElement = document.getElementById('tableNumber');
 
-const tableNumber = "@(Model.TableNumber)";
 // Ödeme işlemini başlatma
 function submitCart() {
     const cart = getCart(); // Sepeti al
@@ -117,7 +125,12 @@ function submitCart() {
         alert('Sepetiniz boş!');
         return;
     }
-
+    
+    if (tableNumberElement && tableNumber) {
+        tableNumberElement.textContent = tableNumber;
+    } else {
+        console.error("Table number bulunamadı veya ayarlanmamış.");
+    }
     // URL oluştur ve yönlendir
     const queryString = new URLSearchParams({
         cartItems: JSON.stringify(cart),
@@ -125,6 +138,11 @@ function submitCart() {
     }).toString();
 
     window.location.href = `/QrCodeList/Buy?${queryString}`;
+}
+// Sepeti temizle
+function clearCart() {
+    localStorage.removeItem('cart'); // Sepeti temizle
+    updateCartCount(); // Sepet simgesini sıfırla
 }
 
 function addtoTotalAmount(){
@@ -151,7 +169,16 @@ function addtoTotalAmount(){
             .catch(error => console.error("Error:", error));
     }
 }
+function redirectToMenu() {
+    const tableNumber = getTableNumber(); // Masa numarasını al
 
+    if (tableNumber) {
+        // Masa numarasına göre menü sayfasına yönlendir
+        window.location.href = `/QrCodeList/${tableNumber}`;
+    } else {
+        console.error('Masa numarası bulunamadı!');
+    }
+}
 
 // Sayfa yüklendiğinde işlemleri başlat
 window.addEventListener('DOMContentLoaded', function () {
@@ -159,4 +186,5 @@ window.addEventListener('DOMContentLoaded', function () {
     updateCartCount(); // Sayfa yüklendiğinde ikon güncellenmeli
     togglePaymentButton();
     addtoTotalAmount();
+    
 });
