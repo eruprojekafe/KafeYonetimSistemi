@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using KafeYonetimSistemi.Data;
 using KafeYonetimSistemi.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace KafeYonetimSistemi.Pages.Inventory
 {
@@ -24,59 +25,51 @@ namespace KafeYonetimSistemi.Pages.Inventory
         public MenuItemTransaction MenuItemTransaction { get; set; } = default!;
         public MenuItem? MenuItem { get; set; }
 
-        public IActionResult OnGet(int id)
+        private bool Initialize(int id)
         {
             MenuItem = _context.MenuItem.FirstOrDefault(m => m.Id == id);
 
             if (MenuItem == null)
             {
+                return false;
+            }
+
+            MenuItemTransaction = new MenuItemTransaction() 
+            {
+                MenuItemId = id,
+            };
+
+            return true;
+        }
+
+        public IActionResult OnGet(int id)
+        {
+            if (!Initialize(id))
+            {
                 return NotFound();
             }
 
-            MenuItemTransaction = new MenuItemTransaction
-            {
-                MenuItemId = id // ID değerini burada ayarlıyoruz
-            };
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!Initialize(MenuItemTransaction.MenuItemId))
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-
-            // Önce mevcut stok miktarını al
-            var lastTransaction = await _context.MenuItemTransaction
-                .Where(m => m.MenuItemId == MenuItemTransaction.MenuItemId)
-                .OrderByDescending(m => m.Timestamp)
-                .FirstOrDefaultAsync();
-
-            var currentStock = lastTransaction?.Amount ?? 0; // Mevcut stok miktarı
-
-            // Transaction işlemi
-            if (MenuItemTransaction.TransactionType == TransactionType.ADD)
-            {
-                // Stok artırılır
-                MenuItemTransaction.Amount = currentStock + MenuItemTransaction.Amount;
-            }
-            else if (MenuItemTransaction.TransactionType == TransactionType.REMOVE)
-            {
-                // Stok azaltılır
-                if (currentStock >= MenuItemTransaction.Amount)
-                {
-                    MenuItemTransaction.Amount = currentStock - MenuItemTransaction.Amount;
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Yetersiz stok.");
-                    return Page();
-                }
-            }
-
+            
             MenuItemTransaction.Timestamp = DateTime.Now;
+
+            // MenuItem.GetCurrentAmount(_context)
+
+
 
             // İşlemi veritabanına ekle
             _context.MenuItemTransaction.Add(MenuItemTransaction);
