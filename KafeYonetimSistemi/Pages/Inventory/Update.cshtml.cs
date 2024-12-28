@@ -25,6 +25,8 @@ namespace KafeYonetimSistemi.Pages.Inventory
         public MenuItemTransaction MenuItemTransaction { get; set; } = default!;
         public MenuItem? MenuItem { get; set; }
 
+
+
         private bool Initialize(int id)
         {
             MenuItem = _context.MenuItem.FirstOrDefault(m => m.Id == id);
@@ -34,7 +36,7 @@ namespace KafeYonetimSistemi.Pages.Inventory
                 return false;
             }
 
-            MenuItemTransaction = new MenuItemTransaction() 
+            MenuItemTransaction = new MenuItemTransaction()
             {
                 MenuItemId = id,
             };
@@ -49,7 +51,6 @@ namespace KafeYonetimSistemi.Pages.Inventory
                 return NotFound();
             }
 
-
             return Page();
         }
 
@@ -57,19 +58,16 @@ namespace KafeYonetimSistemi.Pages.Inventory
         {
             if (!Initialize(MenuItemTransaction.MenuItemId))
             {
+
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-            
+            MenuItemTransaction.MenuItem = MenuItem;
+            ModelState.Clear();
+            TryValidateModel(MenuItemTransaction);
+
+
             MenuItemTransaction.Timestamp = DateTime.Now;
-
-            // MenuItem.GetCurrentAmount(_context)
-
-
 
             // İşlemi veritabanına ekle
             _context.MenuItemTransaction.Add(MenuItemTransaction);
