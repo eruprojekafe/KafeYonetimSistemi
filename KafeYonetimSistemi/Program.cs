@@ -31,6 +31,9 @@ var app = builder.Build();
 // Admin erisim middleware'ini kullan
 app.UseMiddleware<AdminAccessMiddleware>();
 
+// Waiters erisim middleware'ini kullan
+app.UseMiddleware<WaitersAccessMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     // Gelistirme ortaminda migration endpoint'i etkinlestir
