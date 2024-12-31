@@ -20,6 +20,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Razor Pages destegi ekleme
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
