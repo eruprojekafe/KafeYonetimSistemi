@@ -20,11 +20,6 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Razor Pages destegi ekleme ve yetkilendirme ayarlari
-builder.Services.AddRazorPages(options =>
-{
-    options.Conventions.AuthorizeFolder("/Waiters");  // Garson klasorunu yetkilendir
-});
 
 var app = builder.Build();
 
@@ -53,21 +48,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Waiters klasorune yetkisiz erisimi engelleyen middleware
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/Waiters") && !context.User.Identity.IsAuthenticated)
-    {
-        // Yetkisiz kullaniciya 404 hatasý dondur
-        context.Response.StatusCode = 404;
-        await context.Response.WriteAsync("404 - Page Not Found");
-        return;
-    }
-    else
-    {
-        await next();
-    }
-});
 
 // Yetkilendirme
 app.UseAuthorization();
