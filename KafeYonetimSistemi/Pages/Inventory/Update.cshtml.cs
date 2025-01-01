@@ -54,9 +54,15 @@ namespace KafeYonetimSistemi.Pages.Inventory
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (MenuItemTransaction.Amount <= 0)
+            {
+                ModelState.AddModelError("MenuItemTransaction.Amount", "Miktar değeri negatif veya sıfır olamaz.");
+                return OnGet(MenuItemTransaction.MenuItemId);
+            }
+
             if (!TryValidateModel(MenuItemTransaction))
             {
-                return Page();
+                return OnGet(MenuItemTransaction.MenuItemId);
             }
 
             MenuItemTransaction.Timestamp = DateTime.Now;
