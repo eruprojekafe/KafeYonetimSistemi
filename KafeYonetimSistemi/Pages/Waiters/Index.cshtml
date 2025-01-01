@@ -7,7 +7,7 @@
 
 <h1>Aktif Siparişler</h1>
 
-<table class="table table-striped">
+<table class="table table-striped" id="waiter-table">
     <thead>
         <tr>
             <th>ID</th>
@@ -61,3 +61,16 @@
     </tbody>
 </table>
 
+<script>
+    async function fetchTable() {
+        const req = await fetch(".");
+        const result = await req.text();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(result, 'text/html');
+        const newTableBody = doc.querySelector('#waiter-table tbody');
+        document.querySelector('#waiter-table tbody').innerHTML = newTableBody.innerHTML;
+    }
+
+    setInterval(fetchTable, 1000); // Refresh every second
+</script>
