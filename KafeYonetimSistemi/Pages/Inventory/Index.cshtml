@@ -34,9 +34,8 @@
                 <td>
                     <p>@Model.GetCurrentAmount(item.Id)</p>
                 </td>
-                <td>
-                    <button type="button" class="btn btn-primary" disabled>Düzenle</button>
-                    <!-- Yönlendirme yapılacak-->
+                <td> 
+                    <a asp-page="./update" asp-route-id="@item.Id" class="btn btn-primary">Düzenle</a>
                 </td>
             </tr>
         }
