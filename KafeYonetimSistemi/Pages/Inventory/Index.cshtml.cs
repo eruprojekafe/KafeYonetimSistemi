@@ -30,7 +30,6 @@ namespace KafeYonetimSistemi.Pages.Inventory
                 .ToListAsync();
         }
 
-
         public decimal CurrentAmount { get; set; }
         public int GetCurrentAmount(int id)
         {
@@ -40,5 +39,4 @@ namespace KafeYonetimSistemi.Pages.Inventory
                 .Sum(t => t.TransactionType == TransactionType.ADD ? t.Amount : -t.Amount);
         }
     }
-
 }
