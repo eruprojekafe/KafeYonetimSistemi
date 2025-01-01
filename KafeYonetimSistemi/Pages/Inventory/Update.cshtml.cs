@@ -25,8 +25,6 @@ namespace KafeYonetimSistemi.Pages.Inventory
         public MenuItemTransaction MenuItemTransaction { get; set; } = default!;
         public MenuItem? MenuItem { get; set; }
 
-
-
         private bool Initialize(int id)
         {
             MenuItem = _context.MenuItem.FirstOrDefault(m => m.Id == id);
@@ -56,16 +54,10 @@ namespace KafeYonetimSistemi.Pages.Inventory
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!Initialize(MenuItemTransaction.MenuItemId))
+            if (!TryValidateModel(MenuItemTransaction))
             {
-
-                return NotFound();
+                return Page();
             }
-
-            MenuItemTransaction.MenuItem = MenuItem;
-            ModelState.Clear();
-            TryValidateModel(MenuItemTransaction);
-
 
             MenuItemTransaction.Timestamp = DateTime.Now;
 

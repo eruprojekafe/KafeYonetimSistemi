@@ -8,9 +8,10 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta name="viewport" content="width=device-width" />
-	<title>Update</title>
+	<title>@ViewData["Title"]</title>
 	<style>
 		.form-group {
 			margin-bottom: 20px;
@@ -29,6 +30,7 @@
 		}
 	</style>
 </head>
+
 <body>
 	<h1 class="text-center">Envanter Yönetim Sistemi</h1>
 	<h3>Güncelle: @Model.MenuItem?.Name</h3>
@@ -50,7 +52,8 @@
 
 				<div class="form-group">
 					<label for="amount">Miktar:</label>
-					<input asp-for="MenuItemTransaction.Amount" class="form-control" id="amount" placeholder="Miktar giriniz" />
+					<input asp-for="MenuItemTransaction.Amount" class="form-control" id="amount"
+						placeholder="Miktar giriniz" />
 					<span asp-validation-for="MenuItemTransaction.Amount" class="text-danger"></span>
 				</div>
 
@@ -67,4 +70,5 @@
 		}
 	}
 </body>
+
 </html>
