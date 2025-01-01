@@ -10,7 +10,7 @@ namespace KafeYonetimSistemi.Models
         public int Id { get; set; }
 
         [ForeignKey("MenuItemId")]
-        public MenuItem MenuItem { get; set; } = default!;
+        public MenuItem? MenuItem { get; set; } = default!;
 
         [Required]
         public int MenuItemId { get; set; }

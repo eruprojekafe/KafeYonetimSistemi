@@ -29,5 +29,5 @@ public class MenuItem
 
     public string? ImageUrl { get; set; } = null!;
 
-    public ICollection<MenuItemTransaction> MenuItemTransaction { get; set; }
+    public ICollection<MenuItemTransaction> MenuItemTransaction { get; set; } = [];
 }
