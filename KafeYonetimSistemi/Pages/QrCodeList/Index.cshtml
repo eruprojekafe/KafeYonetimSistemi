@@ -1,76 +1,82 @@
 ﻿@page "{tableNumber:int}"
 @model KafeYonetimSistemi.Pages.QrCodeList.QrCodeListModel
 
-@{
-    ViewData["Title"] = "Menü";
-}
-
-<h1>Menü</h1>
-
-<p>
-    Tüm menü seçeneklerini aşağıda görebilirsiniz.
-</p>
-
-<!-- Kategoriler -->
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a class="nav-link @(Model.SelectedCategoryId == null ? "active" : "")"
-           asp-page="."
-           asp-route-tableNumber="@Model.TableNumber">Tümü</a>
-    </li>
-    @if (Model.Categories != null && Model.Categories.Any())
-    {
-        @foreach (var category in Model.Categories)
-        {
-            <li class="nav-item">
-                <a class="nav-link @(Model.SelectedCategoryId == category.Id ? "active" : "")"
-                   asp-page="."
-                   asp-route-tableNumber="@Model.TableNumber"
-                   asp-route-categoryId="@category.Id">
-                    @category.Name
-                </a>
-            </li>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>Menü</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .category-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 150px;
+            height: 200px; 
+            border: 2px solid lightgray;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: cadetblue;
         }
-    }
-</ul>
 
-<!-- Menü -->
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>İsim</th>
-            <th>Ürün Detayları</th>
-            <th>Fiyatı</th>
-            <th>Durum</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.MenuItem != null && Model.MenuItem.Any())
-        {
-            @foreach (var item in Model.MenuItem)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Description</td>
-                    <td>@item.Price.ToString("C")</td>
-                    <td>
-                        @if (item.IsAvailable)
-                        {
-                            <span class="text-success font-weight-bold">Mevcut</span>
-                        }
-                        else
-                        {
-                            <span class="text-danger font-weight-bold">Tükendi</span>
-                        }
-                    </td>
-                </tr>
+            .category-box:hover {
+                background-color: lightgray;
+                color: white;
             }
+
+        .category-image {
+            width: 100%;
+            height: auto;
+            max-width: 140px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            object-fit: contain; 
         }
-        else
-        {
-            <tr>
-                <td colspan="4" class="text-center">Bu kategoride herhangi bir öğe bulunmamaktadır.</td>
-            </tr>
+
+        .category-text {
+            margin-top: 5px;
+            font-size: 1rem;
         }
-    </tbody>
-</table>
+
+        .categories-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-4">FREESİA MENÜ</h1>
+
+        <!-- Kategoriler -->
+        <div class="categories-container">
+            @if (Model.Categories != null && Model.Categories.Any())
+            {
+                @foreach (var category in Model.Categories)
+                {
+                    <div class="category-box" data-category-id="@category.Id" onclick="location.href='/MenuList/@category.Id?tableNumber=@Model.TableNumber'">
+                        <img src="@(string.IsNullOrEmpty(category.ImageUrl) ? "/images/logo.png" : category.ImageUrl)"
+                             class="category-image" />
+                        <p class="category-text">@category.Name</p>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">Henüz kategori bulunmamaktadır.</p>
+            }
+        </div>
+        <script src="~/js/cart.js" asp-append-version="true"></script>
+
+    </div>
+</body>
+</html>

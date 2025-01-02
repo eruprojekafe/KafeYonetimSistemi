@@ -11,15 +11,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MenuItem[0].Name)
-            </th>
-            <th>
-                Miktar
-            </th>
-            <th>
-                İşlem
-            </th>
+            <th>@Html.DisplayNameFor(model => model.MenuItem[0].Name)</th>
+            <th>Miktar</th>
+            <th>İşlem</th>
             <th></th>
         </tr>
     </thead>
@@ -27,16 +21,12 @@
         @foreach (var item in Model.MenuItem)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-               
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
                 <td>
                     <p>@Model.GetCurrentAmount(item.Id)</p>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-primary" disabled>Düzenle</button>
-                    <!-- Yönlendirme yapılacak-->
+                    <a asp-page="./Update" asp-route-id="@item.Id" class="btn btn-primary">Düzenle</a>
                 </td>
             </tr>
         }
