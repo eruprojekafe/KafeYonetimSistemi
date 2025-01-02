@@ -1,15 +1,20 @@
-﻿let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-// Sepeti localStorage'dan almak için yardımcı bir fonksiyon
+﻿// Sepeti localStorage'dan almak için yardımcı bir fonksiyon
 function getCart() {
-    return JSON.parse(localStorage.getItem('cart')) || [];
+    return JSON.parse(localStorage.getItem("cart")) || [];
 }
 
 // Sepeti localStorage'da güncellemek için yardımcı bir fonksiyon
 function setCart(cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
+function setTableNumber(tableNumber) {
+    localStorage.setItem('tableNumber', tableNumber);
+}
 
+// Masa numarasını localStorage'tan al
+function getTableNumber() {
+    return localStorage.getItem('tableNumber');
+}
 // Sepet sayacını güncelleme
 function updateCartCount() {
     const cart = getCart();
@@ -22,31 +27,43 @@ function updateCartCount() {
 }
 
 // Ürün ekleme
-function addToCart(menuItemId, name, price) {
-    const cart = getCart();
-    const existingItem = cart.find(item => item.MenuItemId === menuItemId);
+function addToCart(itemId, name, price, quantity) {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingItem = cart.find(item => item.MenuItemId === itemId);
 
     if (existingItem) {
-        existingItem.Quantity++; // Mevcut ürünün miktarını artır
+        existingItem.Quantity += quantity; // Mevcut ürün miktarını güncelle
     } else {
-        cart.push({ MenuItemId: menuItemId, Name: name, Price: price, Quantity: 1 });
+        cart.push({
+            MenuItemId: itemId,
+            Name: name,
+            Price: price,
+            Quantity: quantity // Yeni ürün ekle
+        });
     }
 
-    setCart(cart); // Sepeti güncelle
-    updateCartCount(); // İkonu güncelle
-    alert('Ürün sepete eklendi!'); // Ürün eklenme mesajı
-    loadCart();
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`${quantity} adet ${name} sepete eklendi!`);
+    updateCartCount(); // Sepet simgesindeki sayıyı güncelle
 }
 
 // Sepet içeriğini localStorage'dan yükle ve göster
 function loadCart() {
     const cart = getCart();
     const cartContents = document.getElementById('cartContents');
+
+    // Eğer 'cartContents' öğesi yoksa fonksiyonu çalıştırmamalıyız
+    if (!cartContents) {
+        console.error("cartContents öğesi bulunamadı.");
+        return;
+    }
+
     cartContents.innerHTML = '';
 
     if (cart.length === 0) {
         cartContents.innerHTML = '<p class="text-center text-muted">Sepetiniz boş!</p>';
         updateCartCount(); // İkonu sıfırla
+        togglePaymentButton(); // Ödeme Yap butonunu güncelle
         return;
     }
 
@@ -66,6 +83,7 @@ function loadCart() {
     });
 
     updateCartCount(); // İkonu güncelle
+    togglePaymentButton(); // Ödeme Yap butonunu güncelle
 }
 
 // Sepetten ürün çıkarma
@@ -81,39 +99,92 @@ function removeFromCart(index) {
     loadCart(); // Sepeti güncelle
     updateCartCount(); // İkonu güncelle
 }
+// Ödeme Yap butonunu gizle/göster
+function togglePaymentButton() {
+    const cart = getCart();
+    const paymentButton = document.getElementById('paymentButton');
+
+    if (!paymentButton) {
+        console.error("paymentButton öğesi bulunamadı.");
+        return; // Hata alıyorsanız, fonksiyonu sonlandır
+    }
+
+    if (cart.length === 0) {
+        paymentButton.style.display = 'none'; // Sepet boşsa gizle
+    } else {
+        paymentButton.style.display = 'inline-block'; // Sepette ürün varsa göster
+    }
+}
+const tableNumber = getTableNumber();
+const tableNumberElement = document.getElementById('tableNumber');
 
 // Ödeme işlemini başlatma
 function submitCart() {
-    const cart = getCart();
-    if (cart.length === 0) {
+    const cart = getCart(); // Sepeti al
+    if (!cart || cart.length === 0) {
         alert('Sepetiniz boş!');
         return;
     }
+    
+    if (tableNumberElement && tableNumber) {
+        tableNumberElement.textContent = tableNumber;
+    } else {
+        console.error("Table number bulunamadı veya ayarlanmamış.");
+    }
+    // URL oluştur ve yönlendir
+    const queryString = new URLSearchParams({
+        cartItems: JSON.stringify(cart),
+        tableNumber: tableNumber
+    }).toString();
 
-    console.log('Sepet gönderiliyor:', cart);
+    window.location.href = `/QrCodeList/Buy?${queryString}`;
+}
+// Sepeti temizle
+function clearCart() {
+    localStorage.removeItem('cart'); // Sepeti temizle
+    updateCartCount(); // Sepet simgesini sıfırla
+}
 
-    fetch('/QrCodeList/Cart', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(cart)
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message || 'Ödeme işlemi başarıyla tamamlandı.');
-            localStorage.removeItem('cart'); // Sepeti temizle
-            loadCart(); // Ekranı güncelle
-            updateCartCount(); // İkonu sıfırla
+function addtoTotalAmount(){
+    const cartData = JSON.parse(localStorage.getItem("cart")); // Get cart data from localStorage
+
+    if (cartData) {
+        fetch('/QrCodeList/Cart?handler=CalculateTotal', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value // Include anti-forgery token
+            },
+            body: JSON.stringify(cartData) // Send cart data to the server
         })
-        .catch(error => {
-            console.error('Hata:', error);
-            alert('Bir hata oluştu. Lütfen tekrar deneyin.');
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const formattedTotal = parseFloat(data.totalAmount).toFixed(2); // Decimal formata dönüştür
+                    document.getElementById("totalAmount").textContent = `${formattedTotal}`; // TotalAmount'u güncelle
+                } else {
+                    console.error("Error calculating total:", data.message);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+}
+function redirectToMenu() {
+    const tableNumber = getTableNumber(); // Masa numarasını al
+
+    if (tableNumber) {
+        // Masa numarasına göre menü sayfasına yönlendir
+        window.location.href = `/QrCodeList/${tableNumber}`;
+    } else {
+        console.error('Masa numarası bulunamadı!');
+    }
 }
 
 // Sayfa yüklendiğinde işlemleri başlat
-window.onload = function () {
+window.addEventListener('DOMContentLoaded', function () {
     loadCart();
     updateCartCount(); // Sayfa yüklendiğinde ikon güncellenmeli
-};
+    togglePaymentButton();
+    addtoTotalAmount();
+    
+});

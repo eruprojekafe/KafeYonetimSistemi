@@ -1,0 +1,209 @@
+﻿@page 
+@model KafeYonetimSistemi.Pages.QrCodeList.BuyModel
+@{
+    ViewData["Title"] = "Ödeme Sayfası";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödeme Ekranı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin-top: -50px;
+        }
+
+        .payment-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .card-preview {
+            height: 200px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background: #e0e0e0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .clear-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .total-amount {
+            margin-bottom: 20px;
+        }
+
+        .container-fluid {
+            margin-top: 15px;
+        }
+
+        .jp-card-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .jp-card {
+            width: 100%;
+            max-width: 350px;
+            font-family: 'Arial', sans-serif;
+            font-size: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="payment-container">
+
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div class="@(Model.Message.Contains("başarılı") ? "success-message" : "error-message")">
+                    @Model.Message
+                </div>
+            }
+            <div class="card-preview jp-card-container">
+            </div>
+            <form method="post">
+                <div class="form-group">
+
+                    <label for="card-number">Kart Numarası</label>
+                    <input type="text" id="card-number" name="PaymentInfo.CardNumber" class="form-control" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-name">Adınız Soyadınız</label>
+                    <input type="text" id="card-name" name="PaymentInfo.CardName" class="form-control" placeholder="Adınız Soyadınız" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="expiration">Son Kullanma Tarihi</label>
+                            <input type="text" id="expiration" name="PaymentInfo.Expiration" class="form-control" placeholder="MM/YY" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="PaymentInfo.CVV" class="form-control" placeholder="123" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="cart-summary" data-total-amount="@Model.TotalAmount">
+                    <p><strong>Toplam Tutar:</strong> <span id="totalAmount">@Model.TotalAmount.ToString("C2")</span> ₺</p>
+                </div>
+                <div class="button-group">
+                    <button type="submit" onclick="clearCart()" class="submit-btn">Öde</button>
+                    <button type="reset" class="clear-btn">Temizle</button>
+                </div>
+            </form>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/card/2.5.0/card.min.js"></script>
+            <script>
+
+                new Card({
+                    form: 'form',
+                    container: '.jp-card-container',
+                    formSelectors: {
+                        numberInput: 'input[name="PaymentInfo.CardNumber"]',
+                        expiryInput: 'input[name="PaymentInfo.Expiration"]',
+                        cvcInput: 'input[name="PaymentInfo.CVV"]',
+                        nameInput: 'input[name="PaymentInfo.CardName"]'
+                    },
+
+                    width: 350, // Kartın genişliğini ayarlayın
+                    formatting: true,
+
+                    placeholders: {
+                        number: '•••• •••• •••• ••••',
+                        name: 'Adınız Soyadınız',
+                        expiry: '••/••',
+                        cvc: '•••'
+                    },
+
+                    // Özelleştirilmiş stil seçenekleri
+                    messages: {
+                        validDate: 'valid\nthru', // Valide Date field
+                        monthYear: 'MM/YY' // optional - default 'month/year'
+                    },
+
+                    // Özelleştirilmiş CSS sınıfları ekleyin
+                    classes: {
+                        valid: 'jp-card-valid', // Card valid state class
+                        invalid: 'jp-card-invalid' // Card invalid state class
+                    }
+                });
+                const totalAmountElement = document.querySelector('.cart-summary');
+                let totalAmount = totalAmountElement ? parseFloat(totalAmountElement.getAttribute('data-total-amount')) : 0;
+                console.log(totalAmount); // Toplam tutarı console'a yazdırır
+            </script>
+        </div>
+    </div>
+</body>
+</html>

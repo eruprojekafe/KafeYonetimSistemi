@@ -3,6 +3,7 @@ using KafeYonetimSistemi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace KafeYonetimSistemi.Pages.QrCodeList
 {
@@ -14,14 +15,17 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
         {
             _context = context;
         }
+        [BindProperty(SupportsGet = true)]
+        public int TableNumber { get; set; }
+        public decimal TotalAmount { get; set; }
 
         // Kullanýcýya gönderilecek ürünlerin listesi
         public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
 
         // Sepet sayfasýný yüklendiðinde çaðrýlacak
-        public IActionResult OnGet()
+        public IActionResult OnGetAsync(int tableNumber)
         {
-            // Sepet, client-side'da saklanýyor. OnGet için backend'den iþlem yapýlmaz.
+            TableNumber = tableNumber;
             return Page();
         }
 
@@ -59,6 +63,7 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
             // Ýþlem baþarýlý
             return new JsonResult(new { message = "Sepet baþarýyla iþlendi.", CartItems });
         }
+
     }
 
     // Sepet öðesi için DTO sýnýfý
