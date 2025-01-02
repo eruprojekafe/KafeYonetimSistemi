@@ -64,35 +64,6 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
             return new JsonResult(new { message = "Sepet baþarýyla iþlendi.", CartItems });
         }
 
-        // Sepet toplamýný hesaplama
-        public IActionResult OnPostCalculateTotal([FromBody] List<CartItemDto> cartItems)
-        {
-            if (cartItems == null || !cartItems.Any())
-            {
-                return BadRequest(new { success = false, message = "Sepet boþ!" });
-            }
-
-            // Veritabanýndan ürünleri getir
-            var items = _context.MenuItem
-                .Where(item => cartItems.Select(ci => ci.MenuItemId).Contains(item.Id))
-                .ToList();
-
-            if (!items.Any())
-            {
-                return BadRequest(new { success = false, message = "Ürünler bulunamadý!" });
-            }
-
-            // Toplam tutarý hesapla
-            TotalAmount = cartItems.Sum(cartItem =>
-            {
-                var dbItem = items.FirstOrDefault(i => i.Id == cartItem.MenuItemId);
-                return (dbItem?.Price ?? 0) * cartItem.Quantity;
-            });
-
-            // Decimal deðer formatýnda döndür
-            return new JsonResult(new { success = true, totalAmount = Math.Round(TotalAmount, 2) });
-        }
-
     }
 
     // Sepet öðesi için DTO sýnýfý

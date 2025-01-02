@@ -49,12 +49,13 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
 
         public IActionResult OnPost()
         {
-            Console.WriteLine($"TableNumber: {TableNumber}");
             if (SimulatePayment(PaymentInfo))
             {
                 try
                 {
                     SaveOrderToDatabase(CartItems);
+                    // Ödeme baþarýlýysa sepeti sýfýrla
+                    ClearCart();
                     Message = "Ödeme baþarýlý. Sipariþiniz oluþturuldu!";
                 }
                 catch (Exception ex)
@@ -68,6 +69,11 @@ namespace KafeYonetimSistemi.Pages.QrCodeList
             }
 
             return Page();
+        }
+        // Sepeti temizleyen yöntem
+        private void ClearCart()
+        {
+            CartItems.Clear();
         }
 
         private bool SimulatePayment(PaymentData paymentData)
